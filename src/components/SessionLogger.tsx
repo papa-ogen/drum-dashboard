@@ -99,7 +99,6 @@ const SessionLogger = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to create session.";
-      setError(errorMessage);
       toast.error(errorMessage);
     }
   };
