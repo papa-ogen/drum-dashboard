@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import { useExercises, useSessions } from "../../utils/api";
+import { useSegmentContext } from "../../hooks/useSegmentContext";
 import { StatCard } from "../StatCard";
 
 const HighestDiff = () => {
+  const { selectedSegment } = useSegmentContext();
   const { sessions } = useSessions();
   const { exercises } = useExercises();
 
@@ -10,13 +12,22 @@ const HighestDiff = () => {
     if (!sessions || !exercises) return null;
     if (!sessions.length) return null;
 
+    const filteredSessions = selectedSegment
+      ? sessions.filter((s) => {
+          const exercise = exercises.find((ex) => ex.id === s.exercise);
+          return exercise && exercise.segmentId === selectedSegment.id;
+        })
+      : sessions;
+
+    if (!filteredSessions.length) return null;
+
     // Group sessions by exercise and calculate BPM difference for each
     const exerciseDiffs = new Map<
       string,
       { min: number; max: number; diff: number; name: string }
     >();
 
-    sessions.forEach((session) => {
+    filteredSessions.forEach((session) => {
       const existing = exerciseDiffs.get(session.exercise);
       const exerciseName =
         exercises.find((e) => e.id === session.exercise)?.name || "Unknown";
@@ -49,7 +60,7 @@ const HighestDiff = () => {
     });
 
     return maxDiff.diff > 0 ? maxDiff : null;
-  }, [sessions, exercises]);
+  }, [sessions, exercises, selectedSegment]);
 
   if (!sessions || !exercises) return null;
 

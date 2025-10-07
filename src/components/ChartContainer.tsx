@@ -1,10 +1,12 @@
 import BpmChart from "./BpmChart";
 import TimeChart from "./TimeChart";
 import { useExercises, useSessions } from "../utils/api";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { formatDate } from "../utils";
+import { useSegmentContext } from "../hooks/useSegmentContext";
 
 const ChartContainer = () => {
+  const { selectedSegment } = useSegmentContext();
   const {
     sessions,
     isLoading: isLoadingSessions,
@@ -17,15 +19,32 @@ const ChartContainer = () => {
   } = useExercises();
   const [selectedExercise, setSelectedExercise] = useState("all");
 
-  const processedData = useMemo(() => {
-    if (!sessions) return [];
+  // Filter exercises by segment
+  const availableExercises = useMemo(() => {
+    if (!exercises) return [];
+    return selectedSegment
+      ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
+      : exercises;
+  }, [exercises, selectedSegment]);
 
-    return sessions.map((s) => ({
+  // Process and filter sessions by segment
+  const processedData = useMemo(() => {
+    if (!sessions || !exercises) return [];
+
+    // Filter sessions by segment first
+    const segmentFilteredSessions = selectedSegment
+      ? sessions.filter((s) => {
+          const exercise = exercises.find((ex) => ex.id === s.exercise);
+          return exercise && exercise.segmentId === selectedSegment.id;
+        })
+      : sessions;
+
+    return segmentFilteredSessions.map((s) => ({
       ...s,
       displayDate: formatDate(s.date),
       timeInMinutes: s.time / 60,
     }));
-  }, [sessions]);
+  }, [sessions, exercises, selectedSegment]);
 
   const filteredData = useMemo(() => {
     if (selectedExercise === "all") {
@@ -33,6 +52,11 @@ const ChartContainer = () => {
     }
     return processedData.filter((s) => s.exercise === selectedExercise);
   }, [processedData, selectedExercise]);
+
+  // Reset exercise filter when segment changes
+  useEffect(() => {
+    setSelectedExercise("all");
+  }, [selectedSegment]);
 
   if (isLoadingSessions || isLoadingExercises) {
     return <div>Loading...</div>;
@@ -50,7 +74,7 @@ const ChartContainer = () => {
           Progress Over Time
         </h2>
         <div className="flex space-x-2 bg-gray-700 p-1 rounded-lg">
-          {["all", ...exercises.map((e) => e.id)].map((ex) => (
+          {["all", ...availableExercises.map((e) => e.id)].map((ex) => (
             <button
               key={ex}
               onClick={() => setSelectedExercise(ex)}
@@ -60,7 +84,9 @@ const ChartContainer = () => {
                   : "text-gray-300 hover:bg-gray-600"
               }`}
             >
-              {ex === "all" ? "All" : exercises.find((e) => e.id === ex)?.name}
+              {ex === "all"
+                ? "All"
+                : availableExercises.find((e) => e.id === ex)?.name}
             </button>
           ))}
         </div>
@@ -68,12 +94,12 @@ const ChartContainer = () => {
       <BpmChart
         filteredData={filteredData}
         selectedExercise={selectedExercise}
-        exercises={exercises}
+        exercises={availableExercises}
       />
       <TimeChart
         filteredData={filteredData}
         selectedExercise={selectedExercise}
-        exercises={exercises}
+        exercises={availableExercises}
       />
     </div>
   );

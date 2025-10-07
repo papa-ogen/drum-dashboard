@@ -1,18 +1,30 @@
 import { useMemo } from "react";
 import { useExercises, useSessions } from "../../utils/api";
+import { useSegmentContext } from "../../hooks/useSegmentContext";
 import { StatCard } from "../StatCard";
 
 const HighestBpm = () => {
+  const { selectedSegment } = useSegmentContext();
   const { sessions } = useSessions();
   const { exercises } = useExercises();
 
   const maxBpm = useMemo(() => {
-    if (!sessions) return null;
+    if (!sessions || !exercises) return null;
     if (!sessions.length) return null;
-    return sessions.reduce((max, session) => {
+
+    const filteredSessions = selectedSegment
+      ? sessions.filter((s) => {
+          const exercise = exercises.find((ex) => ex.id === s.exercise);
+          return exercise && exercise.segmentId === selectedSegment.id;
+        })
+      : sessions;
+
+    if (!filteredSessions.length) return null;
+
+    return filteredSessions.reduce((max, session) => {
       return session.bpm > max.bpm ? session : max;
-    }, sessions[0]);
-  }, [sessions]);
+    }, filteredSessions[0]);
+  }, [sessions, exercises, selectedSegment]);
 
   const lowestBpmByExercise = (exerciseId: string | undefined) => {
     if (!exerciseId) return null;

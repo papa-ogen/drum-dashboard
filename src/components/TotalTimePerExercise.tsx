@@ -10,8 +10,10 @@ import {
   YAxis,
 } from "recharts";
 import { useExercises, useSessions } from "../utils/api";
+import { useSegmentContext } from "../hooks/useSegmentContext";
 
 const TotalTimePerExercise = () => {
+  const { selectedSegment } = useSegmentContext();
   const {
     sessions,
     isLoading: isLoadingSessions,
@@ -22,20 +24,35 @@ const TotalTimePerExercise = () => {
     isLoading: isLoadingExercises,
     isError: isErrorExercises,
   } = useExercises();
+
   const exerciseTimeData = useMemo(() => {
     if (!sessions || !exercises) return [];
 
-    const timeMap = sessions.reduce((acc, session) => {
+    // Filter exercises and sessions by segment
+    const filteredExercises = selectedSegment
+      ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
+      : exercises;
+
+    const filteredSessions = selectedSegment
+      ? sessions.filter((s) => {
+          const exercise = exercises.find((ex) => ex.id === s.exercise);
+          return exercise && exercise.segmentId === selectedSegment.id;
+        })
+      : sessions;
+
+    const timeMap = filteredSessions.reduce((acc, session) => {
       const { exercise: exerciseId, time } = session;
       acc[exerciseId] = (acc[exerciseId] || 0) + time;
       return acc;
     }, {} as Record<string, number>);
 
-    return exercises.map((exercise) => ({
-      name: exercise.name,
-      time: parseFloat(((timeMap[exercise.id] || 0) / 60).toFixed(1)),
-    }));
-  }, [sessions, exercises]);
+    return filteredExercises
+      .map((exercise) => ({
+        name: exercise.name,
+        time: parseFloat(((timeMap[exercise.id] || 0) / 60).toFixed(1)),
+      }))
+      .filter((item) => item.time > 0); // Only show exercises with logged time
+  }, [sessions, exercises, selectedSegment]);
 
   if (isLoadingSessions || isLoadingExercises) {
     return <div>Loading...</div>;

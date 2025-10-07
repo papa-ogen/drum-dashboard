@@ -1,13 +1,24 @@
 import { useMemo } from "react";
 import { StatCard } from "../StatCard";
-import { useSessions } from "../../utils/api";
+import { useExercises, useSessions } from "../../utils/api";
+import { useSegmentContext } from "../../hooks/useSegmentContext";
 
 const TotalPracticeTime = () => {
+  const { selectedSegment } = useSegmentContext();
   const { sessions } = useSessions();
-  const totalPracticeTime = useMemo(() => {
-    if (!sessions || sessions.length === 0) return "0m 0s";
+  const { exercises } = useExercises();
 
-    const totalSeconds = sessions.reduce((acc, s) => acc + s.time, 0);
+  const totalPracticeTime = useMemo(() => {
+    if (!sessions || !exercises || sessions.length === 0) return "0m 0s";
+
+    const filteredSessions = selectedSegment
+      ? sessions.filter((s) => {
+          const exercise = exercises.find((ex) => ex.id === s.exercise);
+          return exercise && exercise.segmentId === selectedSegment.id;
+        })
+      : sessions;
+
+    const totalSeconds = filteredSessions.reduce((acc, s) => acc + s.time, 0);
     // if under an hour,return minutes and seconds
     if (totalSeconds < 3600) {
       return `${Math.floor(totalSeconds / 60)}m ${totalSeconds % 60}s`;
@@ -20,7 +31,7 @@ const TotalPracticeTime = () => {
     return `${hours}h ${minutes === 0 ? "" : `${minutes}m`} ${
       seconds === 0 ? "" : `${seconds}s`
     }`;
-  }, [sessions]);
+  }, [sessions, exercises, selectedSegment]);
 
   if (!sessions) return null;
 
