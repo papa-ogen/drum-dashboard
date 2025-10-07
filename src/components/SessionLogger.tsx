@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mutate } from "swr";
 import { formatDate } from "../utils";
 import {
@@ -26,6 +26,20 @@ const SessionLogger = () => {
   const [time, setTime] = useState<string>("");
   const [exercise, setExercise] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+
+  // Pre-fill form with the most recent session
+  useEffect(() => {
+    if (sessions && sessions.length > 0) {
+      // Get the most recent session (assuming sessions are sorted by date)
+      const latestSession = sessions[sessions.length - 1];
+
+      setExercise(latestSession.exercise);
+      setBpm(latestSession.bpm.toString());
+      setTime((latestSession.time / 60).toString()); // Convert seconds to minutes
+      // Always set date to today for convenience
+      setDate(new Date().toISOString().split("T")[0]);
+    }
+  }, [sessions]);
 
   const getHighestBpmSessionForExercise = (exerciseId: string) => {
     if (!sessions) return null;
@@ -59,11 +73,8 @@ const SessionLogger = () => {
       await postSession(sessionPayload);
 
       // Revalidate the sessions data to refresh the UI
-      mutate(API_ENDPOINTS.SESSIONS);
-
-      // Reset form fields
-      setBpm("");
-      setTime("");
+      // The useEffect will automatically pre-fill with the latest session
+      await mutate(API_ENDPOINTS.SESSIONS);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to create session."
@@ -114,6 +125,7 @@ const SessionLogger = () => {
             onChange={(e) => setExercise(e.target.value)}
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
           >
+            <option value="">Select an exercise</option>
             {exercises.map((e) => (
               <option key={e.id} value={e.id}>
                 {e.name}
@@ -131,9 +143,12 @@ const SessionLogger = () => {
           <input
             type="number"
             id="bpm"
-            value={bpm || getHighestBpmSessionForExercise(exercise)?.bpm}
+            value={bpm}
             onChange={(e) => setBpm(e.target.value)}
-            placeholder="e.g., 120"
+            placeholder={
+              getHighestBpmSessionForExercise(exercise)?.bpm?.toString() ||
+              "e.g., 120"
+            }
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
           />
           {(() => {
