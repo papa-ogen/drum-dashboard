@@ -1,4 +1,10 @@
-import PracticeHeatmap from "../components/Summary/PracticeHeatmap";
+import {
+  ExerciseTimeline,
+  PracticeHeatmap,
+  SegmentComparisonChart,
+  YearProgressBar,
+  YearStats,
+} from "../components/Summary";
 
 const Summary = () => {
   return (
@@ -12,81 +18,16 @@ const Summary = () => {
       </div>
 
       {/* Overall Year Progress */}
-      <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">Year Progress</h2>
-        <div className="h-8 bg-gray-700 rounded-full animate-pulse" />
-        <p className="text-sm text-gray-500 mt-2">
-          Component: YearProgressBar (shows overall year completion)
-        </p>
-      </div>
+      <YearProgressBar />
 
       {/* Key Year Statistics */}
-      <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">
-          Year Statistics
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            "Total Practice Time",
-            "Total Sessions",
-            "Exercises Completed",
-            "Avg BPM Growth",
-          ].map((stat) => (
-            <div
-              key={stat}
-              className="bg-gray-700/50 p-4 rounded-lg animate-pulse"
-            >
-              <div className="h-4 bg-gray-600 rounded w-3/4 mb-2" />
-              <div className="h-8 bg-gray-600 rounded w-1/2" />
-            </div>
-          ))}
-        </div>
-        <p className="text-sm text-gray-500 mt-4">
-          Component: YearStats (aggregate stats across all segments)
-        </p>
-      </div>
+      <YearStats />
 
       {/* Segment Comparison */}
-      <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">
-          Segment Comparison
-        </h2>
-        <div className="h-64 bg-gray-700 rounded-lg animate-pulse flex items-center justify-center">
-          <span className="text-gray-500">Bar Chart Comparing Segments</span>
-        </div>
-        <p className="text-sm text-gray-500 mt-2">
-          Component: SegmentComparisonChart (compare time/sessions/progress
-          across 3 segments)
-        </p>
-      </div>
+      <SegmentComparisonChart />
 
       {/* All Exercises Timeline */}
-      <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">
-          Exercise Progress Timeline
-        </h2>
-        <div className="space-y-4">
-          {["Segment 1", "Segment 2", "Segment 3"].map((segment) => (
-            <div key={segment}>
-              <h3 className="text-sm font-medium text-gray-400 mb-2">
-                {segment}
-              </h3>
-              <div className="grid grid-cols-4 gap-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="h-16 bg-gray-700 rounded-lg animate-pulse"
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        <p className="text-sm text-gray-500 mt-4">
-          Component: ExerciseTimeline (show all exercises by segment with
-          progress)
-        </p>
-      </div>
+      <ExerciseTimeline />
 
       {/* BPM Progress Across All Exercises */}
       <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
