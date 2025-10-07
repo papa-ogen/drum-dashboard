@@ -18,19 +18,6 @@ const Achievements = () => {
     const unlocked = achievements.filter((a) => a.isUnlocked).length;
     const percentage = total > 0 ? Math.round((unlocked / total) * 100) : 0;
 
-    // Debug output
-    console.log(
-      `Achievement Stats: ${unlocked}/${total} unlocked (${percentage}%)`
-    );
-    console.log(
-      "Sample achievements:",
-      achievements.slice(0, 3).map((a) => ({
-        name: a.name,
-        isUnlocked: a.isUnlocked,
-        progress: a.progress,
-      }))
-    );
-
     return { total, unlocked, percentage };
   }, [achievements]);
 
