@@ -158,6 +158,7 @@ const SessionLogger = () => {
             id="bpm"
             value={bpm}
             onChange={(e) => setBpm(e.target.value)}
+            onFocus={(e) => e.target.select()}
             placeholder={
               getHighestBpmSessionForExercise(exercise)?.bpm?.toString() ||
               "e.g., 120"
@@ -186,6 +187,7 @@ const SessionLogger = () => {
             id="time"
             value={time}
             onChange={(e) => setTime(e.target.value)}
+            onFocus={(e) => e.target.select()}
             placeholder="e.g., 15"
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
           />
