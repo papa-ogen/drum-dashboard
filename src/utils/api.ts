@@ -4,13 +4,19 @@ import type { ISession, IExercise } from "../type";
 
 const BASE_URL = "http://localhost:3001/api";
 
+// API endpoint constants
+export const API_ENDPOINTS = {
+  SESSIONS: `${BASE_URL}/sessions`,
+  EXERCISES: `${BASE_URL}/exercises`,
+} as const;
+
 export function useSessions(): {
   sessions: ISession[] | undefined;
   isLoading: boolean;
   isError: Error | undefined;
 } {
   const { data, error, isLoading } = useSWR<ISession[]>(
-    `${BASE_URL}/sessions`,
+    API_ENDPOINTS.SESSIONS,
     fetcher
   );
 
@@ -27,7 +33,7 @@ export function useExercises(): {
   isError: Error | undefined;
 } {
   const { data, error, isLoading } = useSWR<IExercise[]>(
-    `${BASE_URL}/exercises`,
+    API_ENDPOINTS.EXERCISES,
     fetcher
   );
 
@@ -36,4 +42,22 @@ export function useExercises(): {
     isLoading,
     isError: error,
   };
+}
+
+export async function postSession(
+  session: Omit<ISession, "id">
+): Promise<ISession> {
+  const response = await fetch(API_ENDPOINTS.SESSIONS, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(session),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create session: ${response.statusText}`);
+  }
+
+  return response.json();
 }

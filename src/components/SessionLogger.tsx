@@ -1,7 +1,12 @@
 import { useState } from "react";
-import type { ISession } from "../type";
+import { mutate } from "swr";
 import { formatDate } from "../utils";
-import { useExercises, useSessions } from "../utils/api";
+import {
+  useExercises,
+  useSessions,
+  postSession,
+  API_ENDPOINTS,
+} from "../utils/api";
 
 const SessionLogger = () => {
   const {
@@ -51,27 +56,10 @@ const SessionLogger = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3001/api/sessions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(sessionPayload),
-      });
+      await postSession(sessionPayload);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to create session.");
-      }
-
-      const newSessionFromServer = await response.json();
-
-      // @ts-expect-error - this is a workaround to fix the type error
-      setSessions((prevSessions: ISession[]) =>
-        [...prevSessions, newSessionFromServer].sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        )
-      );
+      // Revalidate the sessions data to refresh the UI
+      mutate(API_ENDPOINTS.SESSIONS);
 
       // Reset form fields
       setBpm("");
