@@ -82,9 +82,7 @@ const YearStats = () => {
 
         {/* Total Sessions */}
         <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600/50 hover:border-indigo-500/50 transition-colors">
-          <div className="text-sm text-gray-400 mb-1">
-            Avg Sessions/Exercise
-          </div>
+          <div className="text-sm text-gray-400 mb-1">Total Sessions</div>
           <div className="text-3xl font-bold text-white">
             {stats.totalSessions}
           </div>

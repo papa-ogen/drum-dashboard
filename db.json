@@ -706,6 +706,118 @@
       "bpm": 125,
       "time": 360,
       "id": "f8eaaa8d-a77b-4f5d-a7a5-b3c61db7ec0a"
+    },
+    {
+      "date": "2025-10-03",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 135,
+      "time": 360,
+      "id": "f293c004-9097-4ce1-81b5-c6c80983ad18"
+    },
+    {
+      "date": "2025-10-03",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 137,
+      "time": 360,
+      "id": "8e0d0cbe-336b-46bd-8dbe-3e7d8412f430"
+    },
+    {
+      "date": "2025-10-03",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 105,
+      "time": 360,
+      "id": "570dbe60-a9af-44b7-9d88-d4e990f29180"
+    },
+    {
+      "date": "2025-10-03",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 126,
+      "time": 360,
+      "id": "cad95ad2-0a96-483d-a733-600d3afe726b"
+    },
+    {
+      "date": "2025-10-05",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 135,
+      "time": 360,
+      "id": "5ea921a4-9eed-4e7a-bce7-32ba3fea0491"
+    },
+    {
+      "date": "2025-10-05",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 137,
+      "time": 360,
+      "id": "87dd9d43-7a94-4d8a-8696-9bfa129277d6"
+    },
+    {
+      "date": "2025-10-05",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 106,
+      "time": 360,
+      "id": "30950e91-74d8-478e-a2ef-ee6fff106b43"
+    },
+    {
+      "date": "2025-10-05",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 126,
+      "time": 360,
+      "id": "bc973d6a-b8af-4a24-8a68-5fe37d00000c"
+    },
+    {
+      "date": "2025-10-06",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 136,
+      "time": 360,
+      "id": "b8bcbc3e-4cce-44b4-bd42-d5a89a5e57e7"
+    },
+    {
+      "date": "2025-10-06",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 137,
+      "time": 360,
+      "id": "b7ef8614-9246-40f2-bb2b-5d9d9cd71507"
+    },
+    {
+      "date": "2025-10-06",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 107,
+      "time": 360,
+      "id": "d9c449bb-5042-43e8-914d-218941e65d06"
+    },
+    {
+      "date": "2025-10-06",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 126,
+      "time": 360,
+      "id": "8ff8a2c1-1be4-4916-8d38-be3c22fb7226"
+    },
+    {
+      "date": "2025-10-07",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 136,
+      "time": 360,
+      "id": "397372b4-e5a7-47ff-8a12-16700a6a630e"
+    },
+    {
+      "date": "2025-10-07",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 137,
+      "time": 360,
+      "id": "e163983a-7247-47b4-a39e-e499408e034a"
+    },
+    {
+      "date": "2025-10-07",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 107,
+      "time": 360,
+      "id": "82db27e3-9a31-416d-ad6d-3405b8ccd669"
+    },
+    {
+      "date": "2025-10-07",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 127,
+      "time": 360,
+      "id": "5b4aa4df-edc7-4ceb-9b74-c997e7d20ed9"
     }
   ],
   "exercises": [
@@ -843,6 +955,11 @@
       "id": "1b402b3e-55ae-4940-855a-a408ccfd712c",
       "achievementId": "segment-1-complete",
       "unlockedAt": "2025-09-29"
+    },
+    {
+      "id": "94202055-5336-43b0-af72-d14db87233c6",
+      "achievementId": "growth-25",
+      "unlockedAt": "2025-10-03"
     }
   ]
 }
