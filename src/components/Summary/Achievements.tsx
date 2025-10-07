@@ -226,9 +226,16 @@ const Achievements = () => {
                   </div>
                   {achievement.currentValue !== undefined && (
                     <p className="text-xs text-gray-500 mt-1">
-                      {achievement.currentValue}/
-                      {achievement.actualThreshold ||
-                        achievement.criteria.threshold}{" "}
+                      {formatValue(
+                        achievement.currentValue,
+                        achievement.criteria.type
+                      )}
+                      /
+                      {formatValue(
+                        achievement.actualThreshold ||
+                          achievement.criteria.threshold,
+                        achievement.criteria.type
+                      )}{" "}
                       {getCriteriaUnit(achievement.criteria.type)}
                     </p>
                   )}
@@ -242,12 +249,25 @@ const Achievements = () => {
   );
 };
 
+function formatValue(value: number, type: string): string {
+  if (type === "total_time") {
+    // Convert seconds to hours
+    const hours = Math.floor(value / 3600);
+    const minutes = Math.floor((value % 3600) / 60);
+    if (hours > 0) {
+      return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+    }
+    return `${minutes}m`;
+  }
+  return value.toString();
+}
+
 function getCriteriaUnit(type: string): string {
   switch (type) {
     case "total_sessions":
       return "sessions";
     case "total_time":
-      return "seconds";
+      return "";
     case "highest_bpm":
       return "BPM";
     case "bpm_growth":
