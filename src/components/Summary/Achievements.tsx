@@ -227,7 +227,8 @@ const Achievements = () => {
                   {achievement.currentValue !== undefined && (
                     <p className="text-xs text-gray-500 mt-1">
                       {achievement.currentValue}/
-                      {achievement.criteria.threshold}{" "}
+                      {achievement.actualThreshold ||
+                        achievement.criteria.threshold}{" "}
                       {getCriteriaUnit(achievement.criteria.type)}
                     </p>
                   )}
@@ -257,6 +258,12 @@ function getCriteriaUnit(type: string): string {
       return "perfect weeks";
     case "exercise_mastery":
       return "sessions";
+    case "segment_complete":
+      return "segment";
+    case "course_complete":
+      return "course";
+    case "all_achievements":
+      return "achievements";
     default:
       return "";
   }

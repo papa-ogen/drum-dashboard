@@ -11,9 +11,12 @@ import {
 } from "../utils/api";
 import { getExercisesBySegment } from "../utils/segments";
 import { useSegmentContext } from "../hooks/useSegmentContext";
+import { useAchievements } from "../hooks/useAchievements";
+import { ACHIEVEMENT_DEFINITIONS } from "../data/achievements";
 
 const SessionLogger = () => {
   const { selectedSegment } = useSegmentContext();
+  const { newlyUnlocked, clearNewlyUnlocked } = useAchievements();
   const {
     sessions,
     isLoading: isLoadingSessions,
@@ -91,6 +94,31 @@ const SessionLogger = () => {
     }
   }, [exercise, sessions]);
 
+  // Show toast for newly unlocked achievements
+  useEffect(() => {
+    if (newlyUnlocked.length > 0) {
+      newlyUnlocked.forEach((achievementId) => {
+        const achievement = ACHIEVEMENT_DEFINITIONS.find(
+          (a) => a.id === achievementId
+        );
+        if (achievement) {
+          toast.success(
+            `🎉 Achievement Unlocked: ${achievement.icon} ${achievement.name}!`,
+            {
+              duration: 5000,
+              style: {
+                background: "#1f2937",
+                color: "#f3f4f6",
+                border: "2px solid #6366F1",
+              },
+            }
+          );
+        }
+      });
+      clearNewlyUnlocked();
+    }
+  }, [newlyUnlocked, clearNewlyUnlocked]);
+
   const getHighestBpmSessionForExercise = (exerciseId: string) => {
     if (!sessions) return null;
 
@@ -125,6 +153,11 @@ const SessionLogger = () => {
       // Revalidate the sessions data to refresh the UI
       // The useEffect will automatically pre-fill with the latest session
       await mutate(API_ENDPOINTS.SESSIONS);
+
+      // Small delay to ensure achievement checking happens after sessions update
+      setTimeout(() => {
+        mutate(API_ENDPOINTS.ACHIEVEMENTS);
+      }, 100);
 
       // Show success toast
       const exerciseName =

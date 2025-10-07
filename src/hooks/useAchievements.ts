@@ -15,6 +15,7 @@ export interface AchievementWithStatus extends IAchievementDefinition {
   isUnlocked: boolean;
   progress: number;
   currentValue?: number;
+  actualThreshold?: number;
   unlockedAt?: string;
 }
 
@@ -32,9 +33,10 @@ export function useAchievements() {
       );
 
       // Calculate current progress from sessions
+      const unlockedIds = userAchievements?.map((ua) => ua.achievementId) || [];
       const evaluated =
         sessions && exercises
-          ? evaluateAchievements(sessions, exercises).find(
+          ? evaluateAchievements(sessions, exercises, unlockedIds).find(
               (e) => e.achievementId === def.id
             )
           : null;
@@ -44,6 +46,7 @@ export function useAchievements() {
         isUnlocked: !!userProgress,
         progress: evaluated?.progress || 0,
         currentValue: evaluated?.currentValue,
+        actualThreshold: evaluated?.actualThreshold,
         unlockedAt: userProgress?.unlockedAt,
       };
     }
@@ -54,7 +57,8 @@ export function useAchievements() {
     if (!sessions || !exercises || !userAchievements) return;
 
     const checkAndUnlockAchievements = async () => {
-      const evaluated = evaluateAchievements(sessions, exercises);
+      const unlockedIds = userAchievements.map((ua) => ua.achievementId);
+      const evaluated = evaluateAchievements(sessions, exercises, unlockedIds);
 
       for (const ev of evaluated) {
         const isAlreadyUnlocked = userAchievements.find(

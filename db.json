@@ -838,6 +838,11 @@
       "id": "8e9e761f-2bc3-4ad0-9195-4c5e7d3c3f51",
       "achievementId": "exercise-master",
       "unlockedAt": "2025-09-29"
+    },
+    {
+      "id": "1b402b3e-55ae-4940-855a-a408ccfd712c",
+      "achievementId": "segment-1-complete",
+      "unlockedAt": "2025-09-29"
     }
   ]
 }

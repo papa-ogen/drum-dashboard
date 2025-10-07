@@ -201,4 +201,84 @@ export const ACHIEVEMENT_DEFINITIONS: IAchievementDefinition[] = [
     icon: "🎯",
     criteria: { type: "exercise_mastery", threshold: 20 },
   },
+
+  // Segment Completion Achievements
+  {
+    id: "segment-1-complete",
+    name: "Segment 1 Mastery",
+    description:
+      "Complete at least one session for every exercise in Segment 1",
+    category: "special",
+    tier: "gold",
+    icon: "🏅",
+    criteria: {
+      type: "segment_complete",
+      threshold: 1,
+      segmentId: "segment-1",
+    },
+  },
+  {
+    id: "segment-2-complete",
+    name: "Segment 2 Mastery",
+    description:
+      "Complete at least one session for every exercise in Segment 2",
+    category: "special",
+    tier: "gold",
+    icon: "🏅",
+    criteria: {
+      type: "segment_complete",
+      threshold: 1,
+      segmentId: "segment-2",
+    },
+  },
+  {
+    id: "segment-3-complete",
+    name: "Segment 3 Mastery",
+    description:
+      "Complete at least one session for every exercise in Segment 3",
+    category: "special",
+    tier: "gold",
+    icon: "🏅",
+    criteria: {
+      type: "segment_complete",
+      threshold: 1,
+      segmentId: "segment-3",
+    },
+  },
+
+  // All Segments Completion Achievement
+  {
+    id: "all-segments-complete",
+    name: "Triple Crown",
+    description: "Complete all 3 segments (Segment 1, 2, and 3 Mastery)",
+    category: "special",
+    tier: "platinum",
+    icon: "👑",
+    criteria: { type: "course_complete", threshold: 1 },
+  },
+
+  // Course Completion Achievement
+  {
+    id: "course-complete",
+    name: "Year Complete!",
+    description:
+      "Complete at least one session for every exercise across all segments",
+    category: "special",
+    tier: "platinum",
+    icon: "🎓",
+    criteria: { type: "course_complete", threshold: 1 },
+    hidden: true, // Secret achievement
+  },
+
+  // Ultimate Achievement - Must be last in the array!
+  {
+    id: "perfectionist",
+    name: "Perfectionist",
+    description: "Unlock all achievements",
+    category: "special",
+    tier: "platinum",
+    icon: "💎",
+    criteria: { type: "all_achievements", threshold: 0 }, // Calculated dynamically
+    hidden: true, // Secret achievement
+  },
 ];

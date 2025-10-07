@@ -7,6 +7,7 @@ export interface EvaluatedAchievement {
   unlockedAt: string;
   progress: number;
   currentValue?: number;
+  actualThreshold?: number; // For dynamic thresholds like all_achievements
 }
 
 /**
@@ -14,14 +15,20 @@ export interface EvaluatedAchievement {
  */
 export function evaluateAchievements(
   sessions: ISession[],
-  exercises: IExercise[]
+  exercises: IExercise[],
+  unlockedAchievements?: string[] // Array of unlocked achievement IDs
 ): EvaluatedAchievement[] {
   if (!sessions || sessions.length === 0) return [];
 
   const evaluatedAchievements: EvaluatedAchievement[] = [];
 
   ACHIEVEMENT_DEFINITIONS.forEach((achievement) => {
-    const result = checkAchievement(achievement, sessions, exercises);
+    const result = checkAchievement(
+      achievement,
+      sessions,
+      exercises,
+      unlockedAchievements || []
+    );
     evaluatedAchievements.push(result);
   });
 
@@ -31,7 +38,8 @@ export function evaluateAchievements(
 function checkAchievement(
   achievement: IAchievementDefinition,
   sessions: ISession[],
-  exercises: IExercise[]
+  exercises: IExercise[],
+  unlockedAchievements: string[]
 ): EvaluatedAchievement {
   const { criteria } = achievement;
   let currentValue = 0;
@@ -60,12 +68,44 @@ function checkAchievement(
       break;
 
     case "perfect_week":
-      currentValue = checkPerfectWeek(sessions, exercises) ? 1 : 0;
+      currentValue = checkPerfectWeek(sessions) ? 1 : 0;
       break;
 
     case "exercise_mastery":
       currentValue = calculateMaxSessionsPerExercise(sessions);
       break;
+
+    case "segment_complete":
+      currentValue = checkSegmentComplete(
+        sessions,
+        exercises,
+        criteria.segmentId || ""
+      )
+        ? 1
+        : 0;
+      break;
+
+    case "course_complete":
+      currentValue = checkCourseComplete(sessions, exercises) ? 1 : 0;
+      break;
+
+    case "all_achievements": {
+      // Count total unlocked (including this one when it unlocks)
+      currentValue = unlockedAchievements.length;
+      // Override the threshold from definition to be total achievements
+      threshold = ACHIEVEMENT_DEFINITIONS.length;
+
+      // Special case: if all others are unlocked, this unlocks too
+      const unlockedOthers = unlockedAchievements.filter(
+        (id) => id !== achievement.id
+      );
+      const otherCount = ACHIEVEMENT_DEFINITIONS.length - 1;
+
+      if (unlockedOthers.length >= otherCount) {
+        currentValue = threshold; // Force 100% when all others done
+      }
+      break;
+    }
 
     default:
       currentValue = 0;
@@ -86,6 +126,8 @@ function checkAchievement(
     unlockedAt: unlockedAt || "",
     progress: Math.round(progress),
     currentValue,
+    actualThreshold:
+      achievement.criteria.type === "all_achievements" ? threshold : undefined,
   };
 }
 
@@ -145,10 +187,7 @@ function calculateLongestStreak(sessions: ISession[]): number {
 /**
  * Check if user completed all exercises in any single week
  */
-function checkPerfectWeek(
-  sessions: ISession[],
-  exercises: IExercise[]
-): boolean {
+function checkPerfectWeek(sessions: ISession[]): boolean {
   const weekMap: Record<string, Set<string>> = {};
 
   sessions.forEach((session) => {
@@ -240,9 +279,77 @@ function findUnlockDate(
       break;
     }
 
+    case "segment_complete": {
+      if (!criteria.segmentId) break;
+      const segmentExercises = exercises.filter(
+        (ex) => ex.segmentId === criteria.segmentId
+      );
+      // Find the date when the last required exercise got its first session
+      const exerciseDates = segmentExercises
+        .map((ex) => {
+          const firstSession = sortedSessions.find((s) => s.exercise === ex.id);
+          return firstSession?.date || "";
+        })
+        .filter(Boolean)
+        .sort();
+
+      return exerciseDates[exerciseDates.length - 1] || "";
+    }
+
+    case "course_complete": {
+      // Find the date when the last exercise got its first session
+      const exerciseDates = exercises
+        .map((ex) => {
+          const firstSession = sortedSessions.find((s) => s.exercise === ex.id);
+          return firstSession?.date || "";
+        })
+        .filter(Boolean)
+        .sort();
+
+      return exerciseDates[exerciseDates.length - 1] || "";
+    }
+
+    case "all_achievements":
+      // Use today's date when this unlocks
+      return new Date().toISOString().split("T")[0];
+
     default:
       return sortedSessions[sortedSessions.length - 1]?.date || "";
   }
 
   return sortedSessions[sortedSessions.length - 1]?.date || "";
+}
+
+/**
+ * Check if all exercises in a segment have at least one session
+ */
+function checkSegmentComplete(
+  sessions: ISession[],
+  exercises: IExercise[],
+  segmentId: string
+): boolean {
+  if (!segmentId) return false;
+
+  const segmentExercises = exercises.filter((ex) => ex.segmentId === segmentId);
+  if (segmentExercises.length === 0) return false;
+
+  const exercisesWithSessions = new Set(sessions.map((s) => s.exercise));
+
+  // Check if all segment exercises have at least one session
+  return segmentExercises.every((ex) => exercisesWithSessions.has(ex.id));
+}
+
+/**
+ * Check if all exercises across all segments have at least one session
+ */
+function checkCourseComplete(
+  sessions: ISession[],
+  exercises: IExercise[]
+): boolean {
+  if (exercises.length === 0) return false;
+
+  const exercisesWithSessions = new Set(sessions.map((s) => s.exercise));
+
+  // Check if all exercises have at least one session
+  return exercises.every((ex) => exercisesWithSessions.has(ex.id));
 }

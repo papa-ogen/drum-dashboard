@@ -43,9 +43,13 @@ export interface IAchievementDefinition {
       | "bpm_growth"
       | "streak_days"
       | "perfect_week"
-      | "exercise_mastery";
+      | "exercise_mastery"
+      | "segment_complete"
+      | "course_complete"
+      | "all_achievements";
     threshold: number;
     exerciseId?: string; // For exercise-specific achievements
+    segmentId?: string; // For segment-specific achievements
   };
   hidden?: boolean; // Hidden until unlocked
 }
