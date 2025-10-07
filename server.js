@@ -82,35 +82,28 @@ app.listen(PORT, async () => {
 
   // 1. Check if segments exist. If not, create them.
   if (!db.data.segments || db.data.segments.length === 0) {
-    console.log("Segments are empty. Creating quarters...");
-    // Start from the first exercise date (approximately 3 months per quarter)
+3    console.log("Segments are empty. Creating 3 segments...");
+    // Start from the first exercise date (approximately 4 months per segment)
     db.data.segments = [
       {
-        id: "q1-2025",
-        name: "Quarter 1",
+        id: "segment-1",
+        name: "Segment 1",
         order: 1,
         startDate: "2025-08-18",
-        endDate: "2025-11-17",
+        endDate: "2025-12-17",
       },
       {
-        id: "q2-2025",
-        name: "Quarter 2",
+        id: "segment-2",
+        name: "Segment 2",
         order: 2,
-        startDate: "2025-11-18",
-        endDate: "2026-02-17",
+        startDate: "2025-12-18",
+        endDate: "2026-04-17",
       },
       {
-        id: "q3-2025",
-        name: "Quarter 3",
+        id: "segment-3",
+        name: "Segment 3",
         order: 3,
-        startDate: "2026-02-18",
-        endDate: "2026-05-17",
-      },
-      {
-        id: "q4-2025",
-        name: "Quarter 4",
-        order: 4,
-        startDate: "2026-05-18",
+        startDate: "2026-04-18",
         endDate: "2026-08-17",
       },
     ];
@@ -120,7 +113,7 @@ app.listen(PORT, async () => {
   // 2. Check if exercises exist. If not, create them with UUIDs.
   if (db.data.exercises.length === 0) {
     console.log("Exercises are empty. Populating with initial sample data...");
-    const defaultSegmentId = db.data.segments[0]?.id || "q1-2025";
+    const defaultSegmentId = db.data.segments[0]?.id || "segment-1";
     db.data.exercises.push(
       { id: uuidv4(), name: "Technique 1", segmentId: defaultSegmentId },
       { id: uuidv4(), name: "Subdivision Ladder", segmentId: defaultSegmentId },

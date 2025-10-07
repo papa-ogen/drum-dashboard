@@ -712,51 +712,84 @@
     {
       "id": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
       "name": "Technique 1",
-      "segmentId": "q1-2025"
+      "segmentId": "segment-1"
     },
     {
       "id": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
       "name": "Subdivision Ladder",
-      "segmentId": "q1-2025"
+      "segmentId": "segment-1"
     },
     {
       "id": "dd24db3c-f274-4622-a0b5-54ab101f6157",
       "name": "Weak Leg Builder",
-      "segmentId": "q1-2025"
+      "segmentId": "segment-1"
     },
     {
       "id": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
       "name": "Endurance",
-      "segmentId": "q1-2025"
+      "segmentId": "segment-1"
+    },
+    {
+      "id": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "name": "Technique 2",
+      "segmentId": "segment-2"
+    },
+    {
+      "id": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "name": "Control 2",
+      "segmentId": "segment-2"
+    },
+    {
+      "id": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "name": "Weak Leg Triplet Builder",
+      "segmentId": "segment-2"
+    },
+    {
+      "id": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "name": "Endurance",
+      "segmentId": "segment-2"
+    },
+    {
+      "id": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "name": "6442",
+      "segmentId": "segment-3"
+    },
+    {
+      "id": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "name": "Control 3",
+      "segmentId": "segment-3"
+    },
+    {
+      "id": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "name": "Control Bonus",
+      "segmentId": "segment-3"
+    },
+    {
+      "id": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "name": "16th Builder",
+      "segmentId": "segment-3"
     }
   ],
   "segments": [
     {
-      "id": "q1-2025",
-      "name": "Quarter 1",
+      "id": "segment-1",
+      "name": "Segment 1",
       "order": 1,
       "startDate": "2025-08-18",
-      "endDate": "2025-11-17"
+      "endDate": "2025-12-17"
     },
     {
-      "id": "q2-2025",
-      "name": "Quarter 2",
+      "id": "segment-2",
+      "name": "Segment 2",
       "order": 2,
-      "startDate": "2025-11-18",
-      "endDate": "2026-02-17"
+      "startDate": "2025-12-18",
+      "endDate": "2026-04-17"
     },
     {
-      "id": "q3-2025",
-      "name": "Quarter 3",
+      "id": "segment-3",
+      "name": "Segment 3",
       "order": 3,
-      "startDate": "2026-02-18",
-      "endDate": "2026-05-17"
-    },
-    {
-      "id": "q4-2025",
-      "name": "Quarter 4",
-      "order": 4,
-      "startDate": "2026-05-18",
+      "startDate": "2026-04-18",
       "endDate": "2026-08-17"
     }
   ]
