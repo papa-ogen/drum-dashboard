@@ -1,7 +1,10 @@
 import {
+  AllExercisesBpmChart,
   ExerciseTimeline,
   PracticeHeatmap,
   SegmentComparisonChart,
+  SessionsOverTimeChart,
+  TimeDistributionChart,
   YearProgressBar,
   YearStats,
 } from "../components/Summary";
@@ -30,18 +33,7 @@ const Summary = () => {
       <ExerciseTimeline />
 
       {/* BPM Progress Across All Exercises */}
-      <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-semibold text-white mb-4">
-          BPM Progress (All Exercises)
-        </h2>
-        <div className="h-80 bg-gray-700 rounded-lg animate-pulse flex items-center justify-center">
-          <span className="text-gray-500">Line Chart with All Exercises</span>
-        </div>
-        <p className="text-sm text-gray-500 mt-2">
-          Component: AllExercisesBpmChart (multi-line chart showing BPM over
-          time)
-        </p>
-      </div>
+      <AllExercisesBpmChart />
 
       {/* Milestones & Achievements */}
       <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
@@ -81,30 +73,9 @@ const Summary = () => {
 
       {/* Exercise Distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            Time Distribution
-          </h2>
-          <div className="h-64 bg-gray-700 rounded-lg animate-pulse flex items-center justify-center">
-            <span className="text-gray-500">Pie Chart</span>
-          </div>
-          <p className="text-sm text-gray-500 mt-2">
-            Component: TimeDistributionChart (pie/donut chart)
-          </p>
-        </div>
+        <TimeDistributionChart />
 
-        <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            Sessions by Week
-          </h2>
-          <div className="h-64 bg-gray-700 rounded-lg animate-pulse flex items-center justify-center">
-            <span className="text-gray-500">Area Chart</span>
-          </div>
-          <p className="text-sm text-gray-500 mt-2">
-            Component: SessionsOverTimeChart (area chart showing weekly
-            sessions)
-          </p>
-        </div>
+        <SessionsOverTimeChart />
       </div>
     </div>
   );
