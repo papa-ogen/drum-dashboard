@@ -10,8 +10,10 @@ import {
   API_ENDPOINTS,
 } from "../utils/api";
 import { getExercisesBySegment } from "../utils/segments";
+import { useSegmentContext } from "../hooks/useSegmentContext";
 
 const SessionLogger = () => {
+  const { selectedSegment } = useSegmentContext();
   const {
     sessions,
     isLoading: isLoadingSessions,
@@ -35,18 +37,45 @@ const SessionLogger = () => {
   const [exercise, setExercise] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-fill form with the most recent session on initial load
+  // Reset exercise when segment changes if current exercise doesn't belong to new segment
   useEffect(() => {
-    if (sessions && sessions.length > 0 && !exercise) {
-      // Select the first session
-      const latestSession = sessions[0];
-      setExercise(latestSession.exercise);
+    if (selectedSegment && exercise && exercises) {
+      const currentExercise = exercises.find((e) => e.id === exercise);
+      if (currentExercise && currentExercise.segmentId !== selectedSegment.id) {
+        setExercise("");
+        setBpm("");
+        setTime("");
+      }
     }
-  }, [sessions, exercise]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSegment]); // Only run when segment changes
+
+  // Auto-fill with most recent session when no exercise is selected
+  useEffect(() => {
+    if (
+      sessions &&
+      sessions.length > 0 &&
+      !exercise &&
+      exercises &&
+      selectedSegment
+    ) {
+      // Get filtered sessions based on selected segment
+      const filteredSessionsData = sessions.filter((s) => {
+        const ex = exercises.find((e) => e.id === s.exercise);
+        return ex && ex.segmentId === selectedSegment.id;
+      });
+
+      if (filteredSessionsData.length > 0) {
+        const latestSession = filteredSessionsData[0];
+        setExercise(latestSession.exercise);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSegment, sessions?.length]); // Only run when segment changes or sessions load
 
   // Update BPM and time when exercise changes
   useEffect(() => {
-    if (sessions && exercise) {
+    if (exercise && sessions) {
       // Find the most recent session for the selected exercise
       const exerciseSessions = sessions.filter((s) => s.exercise === exercise);
 
@@ -119,7 +148,12 @@ const SessionLogger = () => {
 
   if (!sessions || !exercises || !segments) return <div>No data</div>;
 
-  const exercisesBySegment = getExercisesBySegment(exercises, segments);
+  // Filter exercises by selected segment
+  const filteredExercises = selectedSegment
+    ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
+    : exercises;
+
+  const exercisesBySegment = getExercisesBySegment(filteredExercises, segments);
 
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
@@ -156,17 +190,25 @@ const SessionLogger = () => {
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
           >
             <option value="">Select an exercise</option>
-            {Array.from(exercisesBySegment.entries()).map(
-              ([segment, segmentExercises]) => (
-                <optgroup key={segment.id} label={segment.name}>
-                  {segmentExercises.map((e) => (
-                    <option key={e.id} value={e.id}>
-                      {e.name}
-                    </option>
-                  ))}
-                </optgroup>
-              )
-            )}
+            {selectedSegment
+              ? // When a segment is selected, show flat list
+                filteredExercises.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.name}
+                  </option>
+                ))
+              : // When "All Time" is selected, show grouped by segment
+                Array.from(exercisesBySegment.entries()).map(
+                  ([segment, segmentExercises]) => (
+                    <optgroup key={segment.id} label={segment.name}>
+                      {segmentExercises.map((e) => (
+                        <option key={e.id} value={e.id}>
+                          {e.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )
+                )}
           </select>
         </div>
         <div>
@@ -182,10 +224,7 @@ const SessionLogger = () => {
             value={bpm}
             onChange={(e) => setBpm(e.target.value)}
             onFocus={(e) => e.target.select()}
-            placeholder={
-              getHighestBpmSessionForExercise(exercise)?.bpm?.toString() ||
-              "e.g., 120"
-            }
+            placeholder="e.g., 120"
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
           />
           {(() => {
