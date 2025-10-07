@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { mutate } from "swr";
+import toast from "react-hot-toast";
 import { formatDate } from "../utils";
 import {
   useExercises,
@@ -88,10 +89,18 @@ const SessionLogger = () => {
       // Revalidate the sessions data to refresh the UI
       // The useEffect will automatically pre-fill with the latest session
       await mutate(API_ENDPOINTS.SESSIONS);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to create session."
+
+      // Show success toast
+      const exerciseName =
+        exercises?.find((e) => e.id === exercise)?.name || "Exercise";
+      toast.success(
+        `Session added! ${exerciseName} at ${bpm} BPM for ${time} min`
       );
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to create session.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
