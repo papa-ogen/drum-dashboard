@@ -10,11 +10,12 @@ const PracticeHeatmap = () => {
     if (!sessions || !exercises || !segments) return [];
 
     // Get date range from first segment start to today
-    const today = new Date();
-    const firstSegment = segments.sort((a, b) => a.order - b.order)[0];
-    const startDate = firstSegment?.startDate
-      ? new Date(firstSegment.startDate)
-      : new Date(today.getFullYear(), 0, 1); // Fallback to Jan 1
+    const firstSegment = [...segments].sort((a, b) => a.order - b.order)[0];
+    const startDateStr = firstSegment?.startDate || "";
+    const startDate = new Date(startDateStr + "T00:00:00"); // Parse as local date
+
+    const todayStr = new Date().toISOString().split("T")[0];
+    const today = new Date(todayStr + "T23:59:59"); // End of today
 
     // Create map of dates to practice time
     const dateMap = new Map<string, number>();
@@ -25,20 +26,26 @@ const PracticeHeatmap = () => {
       dateMap.set(date, currentTime + session.time);
     });
 
-    // Calculate number of days between start and today
-    const daysDiff = Math.ceil(
+    // Calculate number of days between start and today (inclusive)
+    const daysDiff = Math.round(
       (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
     );
 
     // Get the day of week for the first day to calculate proper week numbers
     const firstDayOfWeek = startDate.getDay();
 
-    // Generate array from start date to today
+    // Generate array from start date to today (inclusive)
     const days = [];
     for (let i = 0; i <= daysDiff; i++) {
-      const date = new Date(startDate);
-      date.setDate(startDate.getDate() + i);
-      const dateStr = date.toISOString().split("T")[0];
+      const currentDate = new Date(startDate);
+      currentDate.setDate(currentDate.getDate() + i);
+
+      // Format as YYYY-MM-DD in local timezone
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate()).padStart(2, "0");
+      const dateStr = `${year}-${month}-${day}`;
+
       const practiceTime = dateMap.get(dateStr) || 0;
 
       // Calculate week number accounting for first week offset
@@ -48,7 +55,7 @@ const PracticeHeatmap = () => {
       days.push({
         date: dateStr,
         practiceTime,
-        dayOfWeek: date.getDay(),
+        dayOfWeek: currentDate.getDay(),
         weekNumber,
       });
     }
@@ -121,6 +128,15 @@ const PracticeHeatmap = () => {
       }
     });
 
+    console.log("Month labels:", labels);
+    console.log("Total days:", heatmapData.length);
+    console.log(
+      "Date range:",
+      heatmapData[0]?.date,
+      "to",
+      heatmapData[heatmapData.length - 1]?.date
+    );
+
     return labels;
   }, [heatmapData]);
 
@@ -138,18 +154,22 @@ const PracticeHeatmap = () => {
         <div className="inline-block min-w-full">
           {/* Month labels */}
           <div className="flex gap-[2px] mb-2 ml-8">
-            {monthLabels.map((label) => (
-              <div
-                key={label.month + label.position}
-                style={{
-                  marginLeft:
-                    label.position === 0 ? 0 : `${label.position * 11}px`,
-                }}
-                className="text-xs text-gray-400"
-              >
-                {label.month}
-              </div>
-            ))}
+            {monthLabels.map((label, index) => {
+              const prevPosition =
+                index > 0 ? monthLabels[index - 1].position : 0;
+              const gap = label.position - prevPosition;
+              return (
+                <div
+                  key={label.month + label.position}
+                  style={{
+                    marginLeft: index === 0 ? 0 : `${gap * 8}px`,
+                  }}
+                  className="text-xs text-gray-400"
+                >
+                  {label.month}
+                </div>
+              );
+            })}
           </div>
 
           <div className="flex gap-1">
