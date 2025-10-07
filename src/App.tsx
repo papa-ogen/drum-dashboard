@@ -4,6 +4,7 @@ import {
   ChartContainer,
   Header,
   KeyStats,
+  SegmentProgress,
   SegmentSelector,
   SessionLogger,
   TotalTimePerExercise,
@@ -34,6 +35,7 @@ export default function App() {
           <Header />
 
           <SegmentSelector />
+          <SegmentProgress />
 
           <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column */}
