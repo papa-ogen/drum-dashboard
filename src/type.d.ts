@@ -19,3 +19,39 @@ export interface ISession {
   bpm: number;
   time: number;
 }
+
+export type AchievementCategory =
+  | "bpm"
+  | "consistency"
+  | "time"
+  | "improvement"
+  | "special";
+export type AchievementTier = "bronze" | "silver" | "gold" | "platinum";
+
+export interface IAchievementDefinition {
+  id: string;
+  name: string;
+  description: string;
+  category: AchievementCategory;
+  tier: AchievementTier;
+  icon: string; // Emoji
+  criteria: {
+    type:
+      | "total_sessions"
+      | "total_time"
+      | "highest_bpm"
+      | "bpm_growth"
+      | "streak_days"
+      | "perfect_week"
+      | "exercise_mastery";
+    threshold: number;
+    exerciseId?: string; // For exercise-specific achievements
+  };
+  hidden?: boolean; // Hidden until unlocked
+}
+
+export interface IUserAchievement {
+  id: string;
+  achievementId: string;
+  unlockedAt: string; // ISO date when achievement was unlocked
+}

@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { fetcher } from "./fetcher";
-import type { ISession, IExercise, ISegment } from "../type";
+import type { ISession, IExercise, ISegment, IUserAchievement } from "../type";
 
 const BASE_URL = "http://localhost:3001/api";
 
@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   SESSIONS: `${BASE_URL}/sessions`,
   EXERCISES: `${BASE_URL}/exercises`,
   SEGMENTS: `${BASE_URL}/segments`,
+  ACHIEVEMENTS: `${BASE_URL}/achievements`,
 } as const;
 
 export function useSessions(): {
@@ -62,6 +63,23 @@ export function useSegments(): {
   };
 }
 
+export function useUserAchievements(): {
+  userAchievements: IUserAchievement[] | undefined;
+  isLoading: boolean;
+  isError: Error | undefined;
+} {
+  const { data, error, isLoading } = useSWR<IUserAchievement[]>(
+    API_ENDPOINTS.ACHIEVEMENTS,
+    fetcher
+  );
+
+  return {
+    userAchievements: data,
+    isLoading,
+    isError: error,
+  };
+}
+
 export async function postSession(
   session: Omit<ISession, "id">
 ): Promise<ISession> {
@@ -75,6 +93,30 @@ export async function postSession(
 
   if (!response.ok) {
     throw new Error(`Failed to create session: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function unlockAchievement(
+  achievementId: string,
+  unlockedAt: string
+): Promise<IUserAchievement> {
+  const response = await fetch(API_ENDPOINTS.ACHIEVEMENTS, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ achievementId, unlockedAt }),
+  });
+
+  if (!response.ok) {
+    // 409 means already unlocked, which is fine
+    if (response.status === 409) {
+      const data = await response.json();
+      throw new Error(data.error || "Achievement already unlocked");
+    }
+    throw new Error(`Failed to unlock achievement: ${response.statusText}`);
   }
 
   return response.json();

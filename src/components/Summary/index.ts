@@ -1,3 +1,4 @@
+export { default as Achievements } from "./Achievements";
 export { default as AllExercisesBpmChart } from "./AllExercisesBpmChart";
 export { default as ExerciseTimeline } from "./ExerciseTimeline";
 export { default as PracticeHeatmap } from "./PracticeHeatmap";

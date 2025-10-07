@@ -792,5 +792,52 @@
       "startDate": "2026-04-18",
       "endDate": "2026-08-17"
     }
+  ],
+  "userAchievements": [
+    {
+      "id": "0d2cf0f9-dad2-4244-a3ff-2e96b5b47a24",
+      "achievementId": "bpm-100",
+      "unlockedAt": "2025-08-18"
+    },
+    {
+      "id": "e222dab1-0acc-48f3-9162-8c6d046ca913",
+      "achievementId": "bpm-120",
+      "unlockedAt": "2025-08-18"
+    },
+    {
+      "id": "c0ae8ade-dcf0-47c3-96d3-ff5a1107fdf5",
+      "achievementId": "sessions-10",
+      "unlockedAt": "2025-08-21"
+    },
+    {
+      "id": "6c1f86dc-9c56-4281-9977-b1a8d30d0e82",
+      "achievementId": "sessions-50",
+      "unlockedAt": "2025-09-02"
+    },
+    {
+      "id": "e513dbbe-d972-468b-b8a7-fae9d669f8f7",
+      "achievementId": "sessions-100",
+      "unlockedAt": "2025-09-29"
+    },
+    {
+      "id": "9a0d7645-c041-4a1e-a984-85a250a276d1",
+      "achievementId": "growth-10",
+      "unlockedAt": "2025-08-31"
+    },
+    {
+      "id": "47189b8d-1228-4d5c-bd59-a07572f76b53",
+      "achievementId": "streak-7",
+      "unlockedAt": "2025-09-29"
+    },
+    {
+      "id": "08ed8648-bd3d-4ee1-9920-e190bc89f3fd",
+      "achievementId": "perfect-week",
+      "unlockedAt": "2025-09-29"
+    },
+    {
+      "id": "8e9e761f-2bc3-4ad0-9195-4c5e7d3c3f51",
+      "achievementId": "exercise-master",
+      "unlockedAt": "2025-09-29"
+    }
   ]
 }

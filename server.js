@@ -5,7 +5,12 @@ import { JSONFile } from "lowdb/node";
 import { v4 as uuidv4 } from "uuid";
 
 const adapter = new JSONFile("db.json");
-const db = new Low(adapter, { sessions: [], exercises: [], segments: [] });
+const db = new Low(adapter, {
+  sessions: [],
+  exercises: [],
+  segments: [],
+  userAchievements: [],
+});
 
 const app = express();
 const PORT = 3001;
@@ -51,6 +56,43 @@ app.post("/api/sessions", async (req, res) => {
   res.status(201).json(newSession);
 });
 
+// --- Achievement Routes ---
+app.get("/api/achievements", async (req, res) => {
+  await db.read();
+  res.json(db.data.userAchievements || []);
+});
+
+app.post("/api/achievements", async (req, res) => {
+  await db.read();
+  const { achievementId, unlockedAt } = req.body;
+
+  if (!achievementId || !unlockedAt) {
+    return res
+      .status(400)
+      .json({ error: "achievementId and unlockedAt are required." });
+  }
+
+  // Check if achievement already exists
+  const existing = db.data.userAchievements.find(
+    (a) => a.achievementId === achievementId
+  );
+
+  if (existing) {
+    return res.status(409).json({ error: "Achievement already unlocked." });
+  }
+
+  const newAchievement = {
+    id: uuidv4(),
+    achievementId,
+    unlockedAt,
+  };
+
+  db.data.userAchievements.push(newAchievement);
+  await db.write();
+
+  res.status(201).json(newAchievement);
+});
+
 app.get("/api/albums", async (req, res) => {
   await db.read();
   res.json(db.data.albums);
@@ -82,7 +124,7 @@ app.listen(PORT, async () => {
 
   // 1. Check if segments exist. If not, create them.
   if (!db.data.segments || db.data.segments.length === 0) {
-3    console.log("Segments are empty. Creating 3 segments...");
+    console.log("Segments are empty. Creating 3 segments...");
     // Start from the first exercise date (approximately 4 months per segment)
     db.data.segments = [
       {
@@ -535,7 +577,13 @@ app.listen(PORT, async () => {
     dataModified = true;
   }
 
-  // 4. Write to the file only if data was changed.
+  // 4. Initialize userAchievements if it doesn't exist
+  if (!db.data.userAchievements) {
+    db.data.userAchievements = [];
+    dataModified = true;
+  }
+
+  // 5. Write to the file only if data was changed.
   if (dataModified) {
     await db.write();
     console.log("Sample data has been written to db.json.");
