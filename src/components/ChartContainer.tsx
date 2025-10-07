@@ -17,7 +17,7 @@ const ChartContainer = () => {
     isLoading: isLoadingExercises,
     isError: isErrorExercises,
   } = useExercises();
-  const [selectedExercise, setSelectedExercise] = useState("all");
+  const [selectedExercise, setSelectedExercise] = useState<string>("");
 
   // Filter exercises by segment
   const availableExercises = useMemo(() => {
@@ -47,16 +47,18 @@ const ChartContainer = () => {
   }, [sessions, exercises, selectedSegment]);
 
   const filteredData = useMemo(() => {
-    if (selectedExercise === "all") {
+    if (!selectedExercise) {
       return processedData;
     }
     return processedData.filter((s) => s.exercise === selectedExercise);
   }, [processedData, selectedExercise]);
 
-  // Reset exercise filter when segment changes
+  // Auto-select first exercise when segment changes or exercises load
   useEffect(() => {
-    setSelectedExercise("all");
-  }, [selectedSegment]);
+    if (availableExercises.length > 0) {
+      setSelectedExercise(availableExercises[0].id);
+    }
+  }, [availableExercises]);
 
   if (isLoadingSessions || isLoadingExercises) {
     return <div>Loading...</div>;
@@ -74,19 +76,17 @@ const ChartContainer = () => {
           Progress Over Time
         </h2>
         <div className="flex space-x-2 bg-gray-700 p-1 rounded-lg">
-          {["all", ...availableExercises.map((e) => e.id)].map((ex) => (
+          {availableExercises.map((ex) => (
             <button
-              key={ex}
-              onClick={() => setSelectedExercise(ex)}
+              key={ex.id}
+              onClick={() => setSelectedExercise(ex.id)}
               className={`px-3 py-1 text-sm font-medium rounded-md transition ${
-                selectedExercise === ex
+                selectedExercise === ex.id
                   ? "bg-indigo-600 text-white"
                   : "text-gray-300 hover:bg-gray-600"
               }`}
             >
-              {ex === "all"
-                ? "All"
-                : availableExercises.find((e) => e.id === ex)?.name}
+              {ex.name}
             </button>
           ))}
         </div>
