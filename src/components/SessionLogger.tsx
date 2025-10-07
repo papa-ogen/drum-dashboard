@@ -27,19 +27,32 @@ const SessionLogger = () => {
   const [exercise, setExercise] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-fill form with the most recent session
+  // Pre-fill form with the most recent session on initial load
   useEffect(() => {
-    if (sessions && sessions.length > 0) {
-      // Get the most recent session (assuming sessions are sorted by date)
-      const latestSession = sessions[sessions.length - 1];
-
+    if (sessions && sessions.length > 0 && !exercise) {
+      // Select the first session
+      const latestSession = sessions[0];
       setExercise(latestSession.exercise);
-      setBpm(latestSession.bpm.toString());
-      setTime((latestSession.time / 60).toString()); // Convert seconds to minutes
-      // Always set date to today for convenience
-      setDate(new Date().toISOString().split("T")[0]);
     }
-  }, [sessions]);
+  }, [sessions, exercise]);
+
+  // Update BPM and time when exercise changes
+  useEffect(() => {
+    if (sessions && exercise) {
+      // Find the most recent session for the selected exercise
+      const exerciseSessions = sessions.filter((s) => s.exercise === exercise);
+
+      if (exerciseSessions.length > 0) {
+        const latestForExercise = exerciseSessions[exerciseSessions.length - 1];
+        setBpm(latestForExercise.bpm.toString());
+        setTime((latestForExercise.time / 60).toString()); // Convert seconds to minutes
+      } else {
+        // No previous sessions for this exercise, clear the fields
+        setBpm("");
+        setTime("");
+      }
+    }
+  }, [exercise, sessions]);
 
   const getHighestBpmSessionForExercise = (exerciseId: string) => {
     if (!sessions) return null;
