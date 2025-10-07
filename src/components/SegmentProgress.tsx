@@ -93,7 +93,7 @@ const SegmentProgress = () => {
             Overall Year Progress
           </span>
           <div className="flex items-center gap-3">
-            {lastSegment?.endDate && !selectedSegment && (
+            {lastSegment?.endDate && (
               <span className="text-sm text-gray-400">
                 {getDaysRemaining(lastSegment.endDate)} days remaining
               </span>
