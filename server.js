@@ -5,7 +5,7 @@ import { JSONFile } from "lowdb/node";
 import { v4 as uuidv4 } from "uuid";
 
 const adapter = new JSONFile("db.json");
-const db = new Low(adapter, { sessions: [], exercises: [] });
+const db = new Low(adapter, { sessions: [], exercises: [], segments: [] });
 
 const app = express();
 const PORT = 3001;
@@ -14,6 +14,11 @@ app.use(cors());
 app.use(express.json());
 
 // --- API Routes ---
+app.get("/api/segments", async (req, res) => {
+  await db.read();
+  res.json(db.data.segments || []);
+});
+
 app.get("/api/exercises", async (req, res) => {
   await db.read();
   res.json(db.data.exercises);
@@ -75,19 +80,57 @@ app.listen(PORT, async () => {
   await db.read();
   let dataModified = false;
 
-  // 1. Check if exercises exist. If not, create them with UUIDs.
+  // 1. Check if segments exist. If not, create them.
+  if (!db.data.segments || db.data.segments.length === 0) {
+    console.log("Segments are empty. Creating quarters...");
+    // Start from the first exercise date (approximately 3 months per quarter)
+    db.data.segments = [
+      {
+        id: "q1-2025",
+        name: "Quarter 1",
+        order: 1,
+        startDate: "2025-08-18",
+        endDate: "2025-11-17",
+      },
+      {
+        id: "q2-2025",
+        name: "Quarter 2",
+        order: 2,
+        startDate: "2025-11-18",
+        endDate: "2026-02-17",
+      },
+      {
+        id: "q3-2025",
+        name: "Quarter 3",
+        order: 3,
+        startDate: "2026-02-18",
+        endDate: "2026-05-17",
+      },
+      {
+        id: "q4-2025",
+        name: "Quarter 4",
+        order: 4,
+        startDate: "2026-05-18",
+        endDate: "2026-08-17",
+      },
+    ];
+    dataModified = true;
+  }
+
+  // 2. Check if exercises exist. If not, create them with UUIDs.
   if (db.data.exercises.length === 0) {
     console.log("Exercises are empty. Populating with initial sample data...");
+    const defaultSegmentId = db.data.segments[0]?.id || "q1-2025";
     db.data.exercises.push(
-      { id: uuidv4(), name: "Technique 1" },
-      { id: uuidv4(), name: "Subdivision Ladder" },
-      { id: uuidv4(), name: "Weak Leg Builder" },
-      { id: uuidv4(), name: "Endurance" }
+      { id: uuidv4(), name: "Technique 1", segmentId: defaultSegmentId },
+      { id: uuidv4(), name: "Subdivision Ladder", segmentId: defaultSegmentId },
+      { id: uuidv4(), name: "Weak Leg Builder", segmentId: defaultSegmentId },
+      { id: uuidv4(), name: "Endurance", segmentId: defaultSegmentId }
     );
     dataModified = true;
   }
 
-  // 2. Check if sessions exist. If not, create them using the new exercise IDs.
+  // 3. Check if sessions exist. If not, create them using the new exercise IDs.
   if (db.data.sessions.length === 0) {
     console.log("Database is empty. Populating with initial session data...");
     const exercises = db.data.exercises;
@@ -499,7 +542,7 @@ app.listen(PORT, async () => {
     dataModified = true;
   }
 
-  // 3. Write to the file only if data was changed.
+  // 4. Write to the file only if data was changed.
   if (dataModified) {
     await db.write();
     console.log("Sample data has been written to db.json.");

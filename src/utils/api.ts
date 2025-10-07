@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { fetcher } from "./fetcher";
-import type { ISession, IExercise } from "../type";
+import type { ISession, IExercise, ISegment } from "../type";
 
 const BASE_URL = "http://localhost:3001/api";
 
@@ -8,6 +8,7 @@ const BASE_URL = "http://localhost:3001/api";
 export const API_ENDPOINTS = {
   SESSIONS: `${BASE_URL}/sessions`,
   EXERCISES: `${BASE_URL}/exercises`,
+  SEGMENTS: `${BASE_URL}/segments`,
 } as const;
 
 export function useSessions(): {
@@ -39,6 +40,23 @@ export function useExercises(): {
 
   return {
     exercises: data,
+    isLoading,
+    isError: error,
+  };
+}
+
+export function useSegments(): {
+  segments: ISegment[] | undefined;
+  isLoading: boolean;
+  isError: Error | undefined;
+} {
+  const { data, error, isLoading } = useSWR<ISegment[]>(
+    API_ENDPOINTS.SEGMENTS,
+    fetcher
+  );
+
+  return {
+    segments: data,
     isLoading,
     isError: error,
   };

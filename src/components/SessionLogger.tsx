@@ -5,9 +5,11 @@ import { formatDate } from "../utils";
 import {
   useExercises,
   useSessions,
+  useSegments,
   postSession,
   API_ENDPOINTS,
 } from "../utils/api";
+import { getExercisesBySegment } from "../utils/segments";
 
 const SessionLogger = () => {
   const {
@@ -20,6 +22,11 @@ const SessionLogger = () => {
     isLoading: isLoadingExercises,
     isError: isErrorExercises,
   } = useExercises();
+  const {
+    segments,
+    isLoading: isLoadingSegments,
+    isError: isErrorSegments,
+  } = useSegments();
   const [date, setDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
@@ -103,14 +110,16 @@ const SessionLogger = () => {
     }
   };
 
-  if (isLoadingSessions || isLoadingExercises) {
+  if (isLoadingSessions || isLoadingExercises || isLoadingSegments) {
     return <div>Loading...</div>;
   }
-  if (isErrorSessions || isErrorExercises) {
-    return <div>Error loading sessions or exercises</div>;
+  if (isErrorSessions || isErrorExercises || isErrorSegments) {
+    return <div>Error loading data</div>;
   }
 
-  if (!sessions || !exercises) return <div>No data</div>;
+  if (!sessions || !exercises || !segments) return <div>No data</div>;
+
+  const exercisesBySegment = getExercisesBySegment(exercises, segments);
 
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
@@ -147,11 +156,17 @@ const SessionLogger = () => {
             className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
           >
             <option value="">Select an exercise</option>
-            {exercises.map((e) => (
-              <option key={e.id} value={e.id}>
-                {e.name}
-              </option>
-            ))}
+            {Array.from(exercisesBySegment.entries()).map(
+              ([segment, segmentExercises]) => (
+                <optgroup key={segment.id} label={segment.name}>
+                  {segmentExercises.map((e) => (
+                    <option key={e.id} value={e.id}>
+                      {e.name}
+                    </option>
+                  ))}
+                </optgroup>
+              )
+            )}
           </select>
         </div>
         <div>
