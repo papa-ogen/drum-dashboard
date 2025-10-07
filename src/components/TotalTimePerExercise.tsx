@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -8,12 +9,43 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useExercises, useSessions } from "../utils/api";
 
-const TotalTimePerExercise = ({
-  exerciseTimeData,
-}: {
-  exerciseTimeData: { name: string; time: number }[];
-}) => {
+const TotalTimePerExercise = () => {
+  const {
+    sessions,
+    isLoading: isLoadingSessions,
+    isError: isErrorSessions,
+  } = useSessions();
+  const {
+    exercises,
+    isLoading: isLoadingExercises,
+    isError: isErrorExercises,
+  } = useExercises();
+  const exerciseTimeData = useMemo(() => {
+    if (!sessions || !exercises) return [];
+
+    const timeMap = sessions.reduce((acc, session) => {
+      const { exercise: exerciseId, time } = session;
+      acc[exerciseId] = (acc[exerciseId] || 0) + time;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return exercises.map((exercise) => ({
+      name: exercise.name,
+      time: parseFloat(((timeMap[exercise.id] || 0) / 60).toFixed(1)),
+    }));
+  }, [sessions, exercises]);
+
+  if (isLoadingSessions || isLoadingExercises) {
+    return <div>Loading...</div>;
+  }
+  if (isErrorSessions || isErrorExercises) {
+    return <div>Error loading sessions or exercises</div>;
+  }
+
+  if (!sessions || !exercises) return <div>No data</div>;
+
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
       <h2 className="text-2xl font-semibold text-white mb-4">

@@ -1,14 +1,21 @@
 import { useMemo } from "react";
-import type { IExercise, ISession } from "../type";
+import { useExercises, useSessions } from "../utils/api";
 
-const KeyStats = ({
-  exercises,
-  sessions,
-}: {
-  exercises: IExercise[];
-  sessions: ISession[];
-}) => {
+const KeyStats = () => {
+  const {
+    sessions,
+    isLoading: isLoadingSessions,
+    isError: isErrorSessions,
+  } = useSessions();
+  const {
+    exercises,
+    isLoading: isLoadingExercises,
+    isError: isErrorExercises,
+  } = useExercises();
+
   const totalPracticeTime = useMemo(() => {
+    if (!sessions || sessions.length === 0) return "0m 0s";
+
     const totalSeconds = sessions.reduce((acc, s) => acc + s.time, 0);
     // if under an hour,return minutes and seconds
     if (totalSeconds < 3600) {
@@ -22,7 +29,8 @@ const KeyStats = ({
   }, [sessions]);
 
   const maxBpm = useMemo(() => {
-    if (sessions.length === 0) return { bpm: 0, exercise: "N/A" };
+    if (!sessions || sessions.length === 0) return { bpm: 0, exercise: "N/A" };
+
     return sessions.reduce(
       (max, s) =>
         s.bpm > max.bpm ? { bpm: s.bpm, exercise: s.exercise } : max,
@@ -31,6 +39,8 @@ const KeyStats = ({
   }, [sessions]);
 
   const lowestBpmByExercise = (exerciseId: string) => {
+    if (!sessions || sessions.length === 0) return 0;
+
     const exerciseSessions = sessions.filter((s) => s.exercise === exerciseId);
     if (exerciseSessions.length === 0) return 0;
 
@@ -39,6 +49,15 @@ const KeyStats = ({
       return Math.min(min, s.bpm);
     }, 0);
   };
+
+  if (isLoadingSessions || isLoadingExercises) {
+    return <div>Loading...</div>;
+  }
+  if (isErrorSessions || isErrorExercises) {
+    return <div>Error loading sessions or exercises</div>;
+  }
+
+  if (!sessions || !exercises) return <div>No data</div>;
 
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">

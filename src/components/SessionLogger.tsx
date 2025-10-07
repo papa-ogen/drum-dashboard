@@ -1,29 +1,30 @@
 import { useState } from "react";
-import type { IExercise, ISession } from "../type";
+import type { ISession } from "../type";
 import { formatDate } from "../utils";
+import { useExercises, useSessions } from "../utils/api";
 
-const SessionLogger = ({
-  exercises,
-  exercise,
-  setExercise,
-  sessions,
-  setSessions,
-  setError,
-  error,
-}: {
-  exercises: IExercise[];
-  exercise: string;
-  setExercise: (exercise: string) => void;
-  sessions: ISession[];
-  setSessions: (sessions: ISession[]) => void;
-  setError: (error: string | null) => void;
-  error: string | null;
-}) => {
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [bpm, setBpm] = useState("");
-  const [time, setTime] = useState("");
+const SessionLogger = () => {
+  const {
+    sessions,
+    isLoading: isLoadingSessions,
+    isError: isErrorSessions,
+  } = useSessions();
+  const {
+    exercises,
+    isLoading: isLoadingExercises,
+    isError: isErrorExercises,
+  } = useExercises();
+  const [date, setDate] = useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+  const [bpm, setBpm] = useState<string>("");
+  const [time, setTime] = useState<string>("");
+  const [exercise, setExercise] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
 
   const getHighestBpmSessionForExercise = (exerciseId: string) => {
+    if (!sessions) return null;
+
     const exerciseSessions = sessions.filter((s) => s.exercise === exerciseId);
     if (exerciseSessions.length === 0) return null;
 
@@ -81,6 +82,16 @@ const SessionLogger = ({
       );
     }
   };
+
+  if (isLoadingSessions || isLoadingExercises) {
+    return <div>Loading...</div>;
+  }
+  if (isErrorSessions || isErrorExercises) {
+    return <div>Error loading sessions or exercises</div>;
+  }
+
+  if (!sessions || !exercises) return <div>No data</div>;
+
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
       <h2 className="text-2xl font-semibold mb-4 text-white">

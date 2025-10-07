@@ -1,26 +1,48 @@
 import BpmChart from "./BpmChart";
 import TimeChart from "./TimeChart";
-import type { IExercise } from "../type";
+import { useExercises, useSessions } from "../utils/api";
+import { useMemo, useState } from "react";
+import { formatDate } from "../utils";
 
-const ChartContainer = ({
-  exercises,
-  filteredData,
-  selectedExercise,
-  setSelectedExercise,
-}: {
-  exercises: IExercise[];
-  filteredData: {
-    displayDate: string;
-    timeInMinutes: number;
-    id: string;
-    date: string;
-    exercise: string;
-    bpm: number;
-    time: number;
-  }[];
-  selectedExercise: string;
-  setSelectedExercise: (exercise: string) => void;
-}) => {
+const ChartContainer = () => {
+  const {
+    sessions,
+    isLoading: isLoadingSessions,
+    isError: isErrorSessions,
+  } = useSessions();
+  const {
+    exercises,
+    isLoading: isLoadingExercises,
+    isError: isErrorExercises,
+  } = useExercises();
+  const [selectedExercise, setSelectedExercise] = useState("all");
+
+  const processedData = useMemo(() => {
+    if (!sessions) return [];
+
+    return sessions.map((s) => ({
+      ...s,
+      displayDate: formatDate(s.date),
+      timeInMinutes: s.time / 60,
+    }));
+  }, [sessions]);
+
+  const filteredData = useMemo(() => {
+    if (selectedExercise === "all") {
+      return processedData;
+    }
+    return processedData.filter((s) => s.exercise === selectedExercise);
+  }, [processedData, selectedExercise]);
+
+  if (isLoadingSessions || isLoadingExercises) {
+    return <div>Loading...</div>;
+  }
+  if (isErrorSessions || isErrorExercises) {
+    return <div>Error loading sessions or exercises</div>;
+  }
+
+  if (!sessions || !exercises) return <div>No data</div>;
+
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
