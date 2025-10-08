@@ -77,12 +77,15 @@ export const useMetronome = ({
 
       if (delay >= 0) {
         setTimeout(() => {
-          playClick(isAccent);
-          currentBeatRef.current =
-            (currentBeatRef.current + 1) % beatsPerMeasure;
+          // Update visual to show the CURRENT beat that's playing
           if (onBeatChange) {
             onBeatChange(currentBeatRef.current);
           }
+          // Play the click sound
+          playClick(isAccent);
+          // Then increment to next beat for next iteration
+          currentBeatRef.current =
+            (currentBeatRef.current + 1) % beatsPerMeasure;
         }, delay);
       }
 
