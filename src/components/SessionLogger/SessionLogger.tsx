@@ -187,6 +187,31 @@ const SessionLogger = () => {
       toast.success(
         `Session added! ${exerciseName} at ${bpm} BPM for ${time} min`
       );
+
+      // Auto-advance to next exercise
+      if (exercises) {
+        const filteredExercises = selectedSegment
+          ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
+          : exercises;
+
+        const currentIndex = filteredExercises.findIndex(
+          (e) => e.id === exercise
+        );
+        if (
+          currentIndex !== -1 &&
+          currentIndex < filteredExercises.length - 1
+        ) {
+          // Move to next exercise
+          const nextExercise = filteredExercises[currentIndex + 1];
+          setExercise(nextExercise.id);
+        } else if (
+          currentIndex === filteredExercises.length - 1 &&
+          filteredExercises.length > 0
+        ) {
+          // At the end, wrap around to first exercise
+          setExercise(filteredExercises[0].id);
+        }
+      }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to create session.";
