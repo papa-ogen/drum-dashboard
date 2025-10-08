@@ -1,11 +1,8 @@
 import {
-  AlbumSearch,
-  ChartContainer,
-  KeyStats,
   SegmentProgress,
   SegmentSelector,
   SessionLogger,
-  TotalTimePerExercise,
+  TodaysSessions,
 } from "../components";
 
 const Dashboard = () => {
@@ -18,14 +15,11 @@ const Dashboard = () => {
         {/* Left Column */}
         <div className="lg:col-span-1 space-y-8">
           <SessionLogger />
-          <KeyStats />
-          <AlbumSearch />
         </div>
 
         {/* Right Column */}
         <div className="lg:col-span-2 space-y-8">
-          <ChartContainer />
-          <TotalTimePerExercise />
+          <TodaysSessions />
         </div>
       </main>
     </>
