@@ -3,6 +3,7 @@ export { default as BpmChart } from "./BpmChart";
 export { default as ChartContainer } from "./ChartContainer";
 export { default as Header } from "./Header";
 export { default as KeyStats } from "./KeyStats/KeyStats";
+export { default as Metronome } from "./Metronome";
 export { default as SegmentProgress } from "./SegmentProgress";
 export { default as SegmentSelector } from "./SegmentSelector";
 export { default as SessionLogger } from "./SessionLogger";

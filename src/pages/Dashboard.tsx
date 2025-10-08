@@ -1,4 +1,5 @@
 import {
+  Metronome,
   SegmentProgress,
   SegmentSelector,
   SessionLogger,
@@ -15,6 +16,7 @@ const Dashboard = () => {
         {/* Left Column */}
         <div className="lg:col-span-1 space-y-8">
           <SessionLogger />
+          <Metronome />
         </div>
 
         {/* Right Column */}
