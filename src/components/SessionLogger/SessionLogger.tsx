@@ -13,6 +13,7 @@ import { useSegmentContext } from "../../hooks/useSegmentContext";
 import { useAchievements } from "../../hooks/useAchievements";
 import { ACHIEVEMENT_DEFINITIONS } from "../../data/achievements";
 import Timer from "../Timer";
+import MetronomeEngine from "../MetronomeEngine";
 import DateTimeInput from "./DateTimeInput";
 import ExerciseSelect from "./ExerciseSelect";
 import BpmInput from "./BpmInput";
@@ -49,6 +50,9 @@ const SessionLogger = () => {
   const [exercise, setExercise] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [timerDuration, setTimerDuration] = useState<number>(0);
+
+  // Metronome state
+  const [isMetronomePlaying, setIsMetronomePlaying] = useState<boolean>(false);
 
   // Reset exercise when segment changes if current exercise doesn't belong to new segment
   useEffect(() => {
@@ -132,10 +136,16 @@ const SessionLogger = () => {
   const handleTimerComplete = (practicedSeconds: number) => {
     const minutes = Math.ceil(practicedSeconds / 60);
     setTime(minutes.toString());
+    setIsMetronomePlaying(false);
   };
 
   const handleTimerReset = () => {
     setTime("");
+    setIsMetronomePlaying(false);
+  };
+
+  const handleTimerStart = () => {
+    setIsMetronomePlaying(true);
   };
 
   // Form submission
@@ -220,10 +230,16 @@ const SessionLogger = () => {
           onChange={setBpm}
         />
 
+        <MetronomeEngine
+          bpm={parseInt(bpm) || 120}
+          isPlaying={isMetronomePlaying}
+        />
+
         <Timer
           initialDuration={timerDuration}
           onTimeComplete={handleTimerComplete}
           onReset={handleTimerReset}
+          onStart={handleTimerStart}
         />
 
         <TimeInput time={time} onChange={setTime} />

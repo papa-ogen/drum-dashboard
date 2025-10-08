@@ -5,9 +5,15 @@ interface TimerProps {
   initialDuration: number; // Duration in seconds
   onTimeComplete?: (practicedSeconds: number) => void; // Callback when timer completes or is stopped
   onReset?: () => void; // Optional callback when timer is reset
+  onStart?: () => void; // Optional callback when timer starts
 }
 
-const Timer = ({ initialDuration, onTimeComplete, onReset }: TimerProps) => {
+const Timer = ({
+  initialDuration,
+  onTimeComplete,
+  onReset,
+  onStart,
+}: TimerProps) => {
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
   const [remainingSeconds, setRemainingSeconds] =
     useState<number>(initialDuration);
@@ -63,7 +69,8 @@ const Timer = ({ initialDuration, onTimeComplete, onReset }: TimerProps) => {
   const playTimerSound = () => {
     try {
       const audioContext = new (window.AudioContext ||
-        (window as unknown as { webkitAudioContext: AudioContext }).webkitAudioContext)();
+        (window as unknown as { webkitAudioContext: AudioContext })
+          .webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 
@@ -104,6 +111,9 @@ const Timer = ({ initialDuration, onTimeComplete, onReset }: TimerProps) => {
     const elapsed = initialDuration - remainingSeconds;
     setTimerStartTime(Date.now() - elapsed * 1000);
     setIsTimerRunning(true);
+    if (onStart) {
+      onStart();
+    }
   };
 
   const handleStopTimer = () => {
