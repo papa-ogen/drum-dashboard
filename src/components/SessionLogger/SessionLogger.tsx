@@ -148,6 +148,14 @@ const SessionLogger = () => {
     setIsMetronomePlaying(true);
   };
 
+  const handleTimerPause = () => {
+    setIsMetronomePlaying(false);
+  };
+
+  const handleTimerResume = () => {
+    setIsMetronomePlaying(true);
+  };
+
   // Form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -240,6 +248,8 @@ const SessionLogger = () => {
           onTimeComplete={handleTimerComplete}
           onReset={handleTimerReset}
           onStart={handleTimerStart}
+          onPause={handleTimerPause}
+          onResume={handleTimerResume}
         />
 
         <TimeInput time={time} onChange={setTime} />

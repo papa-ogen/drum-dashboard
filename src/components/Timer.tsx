@@ -6,6 +6,8 @@ interface TimerProps {
   onTimeComplete?: (practicedSeconds: number) => void; // Callback when timer completes or is stopped
   onReset?: () => void; // Optional callback when timer is reset
   onStart?: () => void; // Optional callback when timer starts
+  onPause?: () => void; // Optional callback when timer is paused
+  onResume?: () => void; // Optional callback when timer resumes
 }
 
 const Timer = ({
@@ -13,11 +15,15 @@ const Timer = ({
   onTimeComplete,
   onReset,
   onStart,
+  onPause,
+  onResume,
 }: TimerProps) => {
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [remainingSeconds, setRemainingSeconds] =
     useState<number>(initialDuration);
   const [timerStartTime, setTimerStartTime] = useState<number | null>(null);
+  const [pausedAt, setPausedAt] = useState<number>(0);
 
   // Update remaining seconds when initial duration changes (e.g., when exercise changes)
   useEffect(() => {
@@ -30,7 +36,7 @@ const Timer = ({
   useEffect(() => {
     let interval: number | null = null;
 
-    if (isTimerRunning && timerStartTime) {
+    if (isTimerRunning && !isPaused && timerStartTime) {
       interval = setInterval(() => {
         const now = Date.now();
         const elapsed = Math.floor((now - timerStartTime) / 1000);
@@ -41,6 +47,7 @@ const Timer = ({
         // Play sound when timer reaches 0
         if (remaining === 0 && elapsed > 0) {
           setIsTimerRunning(false);
+          setIsPaused(false);
           playTimerSound();
 
           // Notify parent component of completion
@@ -63,7 +70,13 @@ const Timer = ({
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isTimerRunning, timerStartTime, initialDuration, onTimeComplete]);
+  }, [
+    isTimerRunning,
+    isPaused,
+    timerStartTime,
+    initialDuration,
+    onTimeComplete,
+  ]);
 
   // Play sound when timer completes
   const playTimerSound = () => {
@@ -111,24 +124,48 @@ const Timer = ({
     const elapsed = initialDuration - remainingSeconds;
     setTimerStartTime(Date.now() - elapsed * 1000);
     setIsTimerRunning(true);
+    setIsPaused(false);
     if (onStart) {
       onStart();
     }
   };
 
-  const handleStopTimer = () => {
-    setIsTimerRunning(false);
-    // Notify parent with actual practice time
-    const practicedSeconds = initialDuration - remainingSeconds;
-    if (onTimeComplete) {
-      onTimeComplete(practicedSeconds);
+  const handlePauseTimer = () => {
+    setIsPaused(true);
+    setPausedAt(remainingSeconds);
+    if (onPause) {
+      onPause();
+    }
+  };
+
+  const handleResumeTimer = () => {
+    const elapsed = initialDuration - pausedAt;
+    setTimerStartTime(Date.now() - elapsed * 1000);
+    setIsPaused(false);
+    if (onResume) {
+      onResume();
+    }
+  };
+
+  const handleToggleTimer = () => {
+    if (!isTimerRunning) {
+      // Start the timer
+      handleStartTimer();
+    } else if (isPaused) {
+      // Resume from pause
+      handleResumeTimer();
+    } else {
+      // Pause the timer
+      handlePauseTimer();
     }
   };
 
   const handleResetTimer = () => {
     setIsTimerRunning(false);
+    setIsPaused(false);
     setRemainingSeconds(initialDuration);
     setTimerStartTime(null);
+    setPausedAt(0);
     if (onReset) {
       onReset();
     }
@@ -141,24 +178,20 @@ const Timer = ({
           {formatTimerDisplay(remainingSeconds)}
         </div>
         <div className="flex gap-2 justify-center">
-          {!isTimerRunning ? (
-            <button
-              type="button"
-              onClick={handleStartTimer}
-              disabled={initialDuration === 0}
-              className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-2 px-6 rounded-lg transition"
-            >
-              Start
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleStopTimer}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition"
-            >
-              Stop
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleToggleTimer}
+            disabled={initialDuration === 0}
+            className={`${
+              !isTimerRunning
+                ? "bg-green-600 hover:bg-green-700"
+                : isPaused
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-yellow-600 hover:bg-yellow-700"
+            } disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-2 px-8 rounded-lg transition`}
+          >
+            {!isTimerRunning ? "Start" : isPaused ? "Resume" : "Pause"}
+          </button>
           <button
             type="button"
             onClick={handleResetTimer}
@@ -168,11 +201,11 @@ const Timer = ({
           </button>
         </div>
         {remainingSeconds < initialDuration &&
-          !isTimerRunning &&
+          isPaused &&
           initialDuration > 0 && (
-            <p className="text-xs text-green-400 mt-3">
-              Timer stopped - practiced for{" "}
-              {Math.ceil((initialDuration - remainingSeconds) / 60)} minutes
+            <p className="text-xs text-yellow-400 mt-3">
+              Paused - {Math.ceil((initialDuration - remainingSeconds) / 60)}{" "}
+              minutes practiced
             </p>
           )}
       </div>
