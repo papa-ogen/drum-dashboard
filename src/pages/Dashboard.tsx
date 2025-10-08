@@ -5,6 +5,7 @@ import {
   SessionLogger,
   TodaysSessions,
 } from "../components";
+import { MonthComparison } from "../components/Summary";
 
 const Dashboard = () => {
   return (
@@ -16,8 +17,9 @@ const Dashboard = () => {
         <div>
           <SessionLogger />
         </div>
-        <div>
+        <div className="space-y-4">
           <TodaysSessions />
+          <MonthComparison />
         </div>
         <div>
           <Metronome />

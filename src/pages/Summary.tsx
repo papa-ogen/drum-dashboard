@@ -2,6 +2,7 @@ import {
   Achievements,
   AllExercisesBpmChart,
   ExerciseTimeline,
+  MonthByMonthChart,
   PracticeHeatmap,
   SegmentComparisonChart,
   SessionsOverTimeChart,
@@ -26,6 +27,9 @@ const Summary = () => {
 
       {/* Key Year Statistics */}
       <YearStats />
+
+      {/* Month-by-Month Analysis */}
+      <MonthByMonthChart />
 
       {/* Segment Comparison */}
       <SegmentComparisonChart />

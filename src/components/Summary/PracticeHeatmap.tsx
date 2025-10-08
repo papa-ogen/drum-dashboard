@@ -129,15 +129,6 @@ const PracticeHeatmap = () => {
       }
     });
 
-    console.log("Month labels:", labels);
-    console.log("Total days:", heatmapData.length);
-    console.log(
-      "Date range:",
-      heatmapData[0]?.date,
-      "to",
-      heatmapData[heatmapData.length - 1]?.date
-    );
-
     return labels;
   }, [heatmapData]);
 

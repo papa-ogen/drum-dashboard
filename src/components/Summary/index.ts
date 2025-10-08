@@ -1,6 +1,8 @@
 export { default as Achievements } from "./Achievements";
 export { default as AllExercisesBpmChart } from "./AllExercisesBpmChart";
 export { default as ExerciseTimeline } from "./ExerciseTimeline";
+export { default as MonthByMonthChart } from "./MonthByMonthChart";
+export { default as MonthComparison } from "./MonthComparison";
 export { default as PracticeHeatmap } from "./PracticeHeatmap";
 export { default as SegmentComparisonChart } from "./SegmentComparisonChart";
 export { default as SessionsOverTimeChart } from "./SessionsOverTimeChart";
