@@ -22,6 +22,13 @@
       "time": 120
     },
     {
+      "id": "432c86c8-f4a2-439d-a4c2-c46f84724f38",
+      "date": "2025-08-18",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 110,
+      "time": 120
+    },
+    {
       "id": "b0c1804e-f517-4df8-b21d-5e9138dd2a24",
       "date": "2025-08-19",
       "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
@@ -43,6 +50,13 @@
       "time": 120
     },
     {
+      "id": "432c86c8-f4a2-439d-a4c2-c46f84724f38",
+      "date": "2025-08-19",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 110,
+      "time": 120
+    },
+    {
       "id": "da3a6c3e-9f5e-40c6-9ab1-fc9bd76b3733",
       "date": "2025-08-20",
       "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
@@ -61,6 +75,13 @@
       "date": "2025-08-20",
       "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
       "bpm": 90,
+      "time": 120
+    },
+    {
+      "id": "432c86c8-f4a2-439d-a4c2-c46f84724f38",
+      "date": "2025-08-19",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 110,
       "time": 120
     },
     {

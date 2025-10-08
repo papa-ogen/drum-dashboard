@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useExercises, useSessions } from "../../utils/api";
+import { countUniquePracticeDays } from "../../utils";
 
 const YearStats = () => {
   const { sessions } = useSessions();
@@ -9,7 +10,7 @@ const YearStats = () => {
     if (!sessions || !exercises) {
       return {
         totalPracticeTime: "0h",
-        totalSessions: 0,
+        totalPracticeDays: 0,
         exercisesCompleted: 0,
         avgBpmGrowth: 0,
       };
@@ -26,11 +27,8 @@ const YearStats = () => {
     const exercisesWithSessions = new Set(sessions.map((s) => s.exercise));
     const exercisesCompleted = exercisesWithSessions.size;
 
-    // Total sessions (average sessions per exercise)
-    const totalSessions =
-      exercisesCompleted > 0
-        ? Math.round(sessions.length / exercisesCompleted)
-        : 0;
+    // Total practice days (unique days with at least one session)
+    const totalPracticeDays = countUniquePracticeDays(sessions);
 
     // Average BPM growth across all exercises
     const exerciseGrowth: number[] = [];
@@ -60,7 +58,7 @@ const YearStats = () => {
 
     return {
       totalPracticeTime,
-      totalSessions,
+      totalPracticeDays,
       exercisesCompleted,
       avgBpmGrowth,
     };
@@ -80,11 +78,11 @@ const YearStats = () => {
           </div>
         </div>
 
-        {/* Total Sessions */}
+        {/* Practice Days */}
         <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600/50 hover:border-indigo-500/50 transition-colors">
-          <div className="text-sm text-gray-400 mb-1">Total Sessions</div>
+          <div className="text-sm text-gray-400 mb-1">Practice Days</div>
           <div className="text-3xl font-bold text-white">
-            {stats.totalSessions}
+            {stats.totalPracticeDays}
           </div>
         </div>
 

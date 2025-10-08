@@ -2,18 +2,15 @@ import { useMemo } from "react";
 import { useExercises, useSessions } from "../../utils/api";
 import { useSegmentContext } from "../../hooks/useSegmentContext";
 import { StatCard } from "../StatCard";
+import { countUniquePracticeDays } from "../../utils";
 
 const TotalSessions = () => {
   const { selectedSegment } = useSegmentContext();
   const { sessions } = useSessions();
   const { exercises } = useExercises();
 
-  const filteredStats = useMemo(() => {
-    if (!sessions || !exercises) return { sessions: 0, exercises: 0 };
-
-    const filteredExercises = selectedSegment
-      ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
-      : exercises;
+  const totalPracticeDays = useMemo(() => {
+    if (!sessions || !exercises) return 0;
 
     const filteredSessions = selectedSegment
       ? sessions.filter((s) => {
@@ -22,25 +19,13 @@ const TotalSessions = () => {
         })
       : sessions;
 
-    return {
-      sessions: filteredSessions.length,
-      exercises: filteredExercises.length,
-    };
+    return countUniquePracticeDays(filteredSessions);
   }, [sessions, exercises, selectedSegment]);
 
   if (!sessions || !exercises) return null;
 
   return (
-    <StatCard
-      title="Total Sessions"
-      value={
-        filteredStats.exercises > 0
-          ? Math.round(
-              filteredStats.sessions / filteredStats.exercises
-            ).toString()
-          : "0"
-      }
-    />
+    <StatCard title="Practice Days" value={totalPracticeDays.toString()} />
   );
 };
 

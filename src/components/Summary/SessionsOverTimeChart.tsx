@@ -9,6 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { useExercises, useSessions, useSegments } from "../../utils/api";
+import { countUniquePracticeDays } from "../../utils";
 
 const SessionsOverTimeChart = () => {
   const { sessions } = useSessions();
@@ -32,40 +33,31 @@ const SessionsOverTimeChart = () => {
     );
     const numWeeks = Math.ceil(daysDiff / 7);
 
-    // Create map of week number to sessions
-    const weekMap: Record<number, number> = {};
-
-    sessions.forEach((session) => {
-      const sessionDate = new Date(session.date);
-      const weeksDiff = Math.floor(
-        (sessionDate.getTime() - startDate.getTime()) /
-          (1000 * 60 * 60 * 24 * 7)
-      );
-
-      if (weeksDiff >= 0 && weeksDiff < numWeeks) {
-        weekMap[weeksDiff] = (weekMap[weeksDiff] || 0) + 1;
-      }
-    });
-
-    // Count total exercises with sessions
-    const exerciseCount = new Set(sessions.map((s) => s.exercise)).size;
-    const divisor = exerciseCount > 0 ? exerciseCount : 1;
-
     // Generate data for each week
     const data = [];
     for (let week = 0; week < numWeeks; week++) {
       const weekStartDate = new Date(startDate);
       weekStartDate.setDate(startDate.getDate() + week * 7);
 
+      const weekEndDate = new Date(weekStartDate);
+      weekEndDate.setDate(weekStartDate.getDate() + 6);
+
       const weekLabel = weekStartDate.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
       });
 
+      // Count unique days with sessions in this week
+      const uniqueDaysInWeek = countUniquePracticeDays(
+        sessions,
+        weekStartDate,
+        weekEndDate
+      );
+
       data.push({
         week: `Week ${week + 1}`,
         weekLabel,
-        sessions: parseFloat(((weekMap[week] || 0) / divisor).toFixed(1)),
+        sessions: uniqueDaysInWeek,
       });
     }
 
@@ -77,7 +69,7 @@ const SessionsOverTimeChart = () => {
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
       <h2 className="text-xl font-semibold text-white mb-4">
-        Sessions per Week
+        Practice Days per Week
       </h2>
 
       <div className="h-64">
@@ -105,7 +97,7 @@ const SessionsOverTimeChart = () => {
               stroke="#A0AEC0"
               fontSize={12}
               label={{
-                value: "Sessions",
+                value: "Practice Days",
                 angle: -90,
                 position: "insideLeft",
                 style: { fill: "#A0AEC0" },
@@ -130,7 +122,7 @@ const SessionsOverTimeChart = () => {
               stroke="#6366F1"
               strokeWidth={2}
               fill="url(#sessionGradient)"
-              name="Sessions"
+              name="Practice Days"
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -143,9 +135,7 @@ const SessionsOverTimeChart = () => {
           <div className="text-xl font-bold text-white">{chartData.length}</div>
         </div>
         <div className="bg-gray-700/30 p-3 rounded-lg text-center">
-          <div className="text-xs text-gray-400 mb-1">
-            Avg Sessions/Week
-          </div>
+          <div className="text-xs text-gray-400 mb-1">Avg Days/Week</div>
           <div className="text-xl font-bold text-white">
             {chartData.length > 0
               ? (
@@ -158,7 +148,7 @@ const SessionsOverTimeChart = () => {
         <div className="bg-gray-700/30 p-3 rounded-lg text-center">
           <div className="text-xs text-gray-400 mb-1">Best Week</div>
           <div className="text-xl font-bold text-white">
-            {Math.max(...chartData.map((w) => w.sessions), 0).toFixed(1)}
+            {Math.max(...chartData.map((w) => w.sessions), 0)} days
           </div>
         </div>
       </div>
