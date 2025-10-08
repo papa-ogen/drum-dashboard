@@ -1,145 +1,117 @@
 import { useMemo } from "react";
 import {
-  Cell,
-  Legend,
-  Pie,
-  PieChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { useExercises, useSessions } from "../../utils/api";
+import { useSessions } from "../../utils/api";
 
 const TimeDistributionChart = () => {
   const { sessions } = useSessions();
-  const { exercises } = useExercises();
 
   const chartData = useMemo(() => {
-    if (!sessions || !exercises) return [];
+    if (!sessions) return [];
 
-    // Calculate total time per exercise
-    const timeMap = sessions.reduce((acc, session) => {
-      const { exercise: exerciseId, time } = session;
-      acc[exerciseId] = (acc[exerciseId] || 0) + time;
-      return acc;
-    }, {} as Record<string, number>);
+    // Group sessions by hour of day (using UTC to match stored time)
+    const hourMap: Record<number, number> = {};
 
-    // Create chart data with percentages
-    const totalTime = Object.values(timeMap).reduce((a, b) => a + b, 0);
+    sessions.forEach((session) => {
+      const date = new Date(session.date);
+      const hour = date.getUTCHours(); // Use UTC hours to match the stored timestamp
+      hourMap[hour] = (hourMap[hour] || 0) + 1;
+    });
 
-    return exercises
-      .map((exercise) => {
-        const time = timeMap[exercise.id] || 0;
-        const percentage = totalTime > 0 ? (time / totalTime) * 100 : 0;
+    const formatHour = (hour: number): string => {
+      if (hour === 0) return "12 AM";
+      if (hour === 12) return "12 PM";
+      if (hour < 12) return `${hour} AM`;
+      return `${hour - 12} PM`;
+    };
 
-        return {
-          name: exercise.name,
-          value: Math.round(time / 60), // Convert to minutes
-          percentage: percentage.toFixed(1),
-        };
-      })
-      .filter((item) => item.value > 0)
-      .sort((a, b) => b.value - a.value);
-  }, [sessions, exercises]);
+    // Create data for all 24 hours
+    return Array.from({ length: 24 }, (_, hour) => ({
+      hour,
+      sessions: hourMap[hour] || 0,
+      label: formatHour(hour),
+    }));
+  }, [sessions]);
 
-  const colors = [
-    "#6366F1", // Indigo
-    "#10b981", // Green
-    "#f59e0b", // Amber
-    "#ef4444", // Red
-    "#8b5cf6", // Purple
-    "#ec4899", // Pink
-    "#14b8a6", // Teal
-    "#f97316", // Orange
-    "#06b6d4", // Cyan
-    "#84cc16", // Lime
-    "#a855f7", // Violet
-    "#f43f5e", // Rose
-  ];
-
-  const formatTime = (minutes: number) => {
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0
-      ? `${hours}h ${remainingMinutes}m`
-      : `${hours}h`;
+  const getPeakHours = () => {
+    const maxSessions = Math.max(...chartData.map((d) => d.sessions));
+    const peakHours = chartData
+      .filter((d) => d.sessions === maxSessions && d.sessions > 0)
+      .map((d) => d.label);
+    return peakHours;
   };
 
-  if (!sessions || !exercises || chartData.length === 0) return null;
+  const totalSessions = chartData.reduce((acc, d) => acc + d.sessions, 0);
+
+  if (!sessions) return null;
+
+  const peakHours = getPeakHours();
 
   return (
     <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
       <h2 className="text-xl font-semibold text-white mb-4">
-        Time Distribution
+        Practice Time of Day
       </h2>
 
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, percentage }) => `${name}: ${percentage}%`}
-              outerRadius={80}
-              innerRadius={40}
-              fill="#8884d8"
-              dataKey="value"
-              paddingAngle={2}
-            >
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={colors[index % colors.length]}
-                />
-              ))}
-            </Pie>
+          <BarChart
+            data={chartData}
+            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#4A5568" />
+            <XAxis
+              dataKey="label"
+              stroke="#A0AEC0"
+              fontSize={10}
+              angle={-45}
+              textAnchor="end"
+              height={70}
+              interval={1}
+            />
+            <YAxis
+              stroke="#A0AEC0"
+              fontSize={12}
+              label={{
+                value: "Sessions",
+                angle: -90,
+                position: "insideLeft",
+                style: { fill: "#A0AEC0" },
+              }}
+            />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#1A202C",
                 border: "1px solid #4A5568",
                 borderRadius: "0.5rem",
               }}
-              formatter={(value: number) => [formatTime(value), "Time"]}
+              formatter={(value: number) => [value, "Sessions"]}
+              labelFormatter={(label) => `Time: ${label}`}
             />
-            <Legend
-              verticalAlign="bottom"
-              height={36}
-              iconType="circle"
-              formatter={(value, entry: any) => {
-                const item = chartData.find((d) => d.name === value);
-                return `${value} (${item?.percentage}%)`;
-              }}
-            />
-          </PieChart>
+            <Bar dataKey="sessions" fill="#6366F1" radius={[4, 4, 0, 0]} />
+          </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Stats List */}
-      <div className="mt-6 space-y-2">
-        {chartData.map((item, index) => (
-          <div
-            key={item.name}
-            className="flex items-center justify-between p-2 bg-gray-700/30 rounded-lg"
-          >
-            <div className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: colors[index % colors.length] }}
-              />
-              <span className="text-sm text-gray-300">{item.name}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-white">
-                {formatTime(item.value)}
-              </span>
-              <span className="text-xs text-gray-400 w-12 text-right">
-                {item.percentage}%
-              </span>
-            </div>
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 gap-4 mt-6">
+        <div className="bg-gray-700/30 p-3 rounded-lg text-center">
+          <div className="text-xs text-gray-400 mb-1">Total Sessions</div>
+          <div className="text-xl font-bold text-white">{totalSessions}</div>
+        </div>
+        <div className="bg-gray-700/30 p-3 rounded-lg text-center">
+          <div className="text-xs text-gray-400 mb-1">Peak Practice Time</div>
+          <div className="text-lg font-bold text-white">
+            {peakHours.length > 0 ? peakHours.join(", ") : "N/A"}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
