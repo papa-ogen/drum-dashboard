@@ -2,7 +2,8 @@ import useSWR from "swr";
 import { fetcher } from "./fetcher";
 import type { ISession, IExercise, ISegment, IUserAchievement } from "../type";
 
-const BASE_URL = "http://localhost:3001/api";
+// Use environment variable or default to localhost
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 // API endpoint constants
 export const API_ENDPOINTS = {
