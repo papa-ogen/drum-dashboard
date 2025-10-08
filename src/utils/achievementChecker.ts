@@ -162,7 +162,10 @@ function calculateMaxBpmGrowth(
 function calculateLongestStreak(sessions: ISession[]): number {
   if (sessions.length === 0) return 0;
 
-  const uniqueDates = Array.from(new Set(sessions.map((s) => s.date))).sort();
+  // Extract just the date part from ISO timestamps and get unique dates
+  const uniqueDates = Array.from(
+    new Set(sessions.map((s) => s.date.split("T")[0]))
+  ).sort();
   let currentStreak = 1;
   let maxStreak = 1;
 

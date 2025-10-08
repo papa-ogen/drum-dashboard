@@ -14,8 +14,7 @@ export interface IExercise {
 
 export interface ISession {
   id: string;
-  date: string; // YYYY-MM-DD format for backward compatibility
-  timestamp?: string; // Full ISO timestamp (e.g., "2025-10-08T14:30:00.000Z")
+  date: string; // Full ISO timestamp (e.g., "2025-10-08T16:00:00.000Z")
   exercise: string;
   bpm: number;
   time: number;

@@ -19,8 +19,10 @@ const AllExercisesBpmChart = () => {
   const chartData = useMemo(() => {
     if (!sessions || !exercises) return [];
 
-    // Get all unique dates, sorted
-    const allDates = Array.from(new Set(sessions.map((s) => s.date))).sort();
+    // Get all unique dates (date part only), sorted
+    const allDates = Array.from(
+      new Set(sessions.map((s) => s.date.split("T")[0]))
+    ).sort();
 
     // Create data points for each date
     return allDates.map((date) => {
@@ -33,9 +35,7 @@ const AllExercisesBpmChart = () => {
       exercises.forEach((exercise) => {
         const exerciseSessionsUpToDate = sessions
           .filter(
-            (s) =>
-              s.exercise === exercise.id &&
-              new Date(s.date).getTime() <= new Date(date).getTime()
+            (s) => s.exercise === exercise.id && s.date.split("T")[0] <= date
           )
           .sort(
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()

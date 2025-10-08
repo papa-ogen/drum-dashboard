@@ -144,11 +144,10 @@ const SessionLogger = () => {
     setError(null);
 
     // Create ISO timestamp from date and time
-    const timestamp = `${date}T${timeOfDay}:00.000Z`;
+    const dateISO = `${date}T${timeOfDay}:00.000Z`;
 
     const sessionPayload = {
-      date,
-      timestamp,
+      date: dateISO,
       exercise, // this is the exercise ID from the form state
       bpm: parseInt(bpm),
       time: parseInt(time) * 60, // Convert minutes to seconds

@@ -21,7 +21,8 @@ const PracticeHeatmap = () => {
     const dateMap = new Map<string, number>();
 
     sessions.forEach((session) => {
-      const date = session.date;
+      // Extract just the date part from ISO timestamp
+      const date = session.date.split("T")[0];
       const currentTime = dateMap.get(date) || 0;
       dateMap.set(date, currentTime + session.time);
     });
