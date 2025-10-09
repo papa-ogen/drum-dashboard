@@ -7,6 +7,26 @@ export const formatDate = (dateString: string) => {
 };
 
 /**
+ * Formats a UTC timestamp to time of day (e.g., "4:00 PM")
+ * @param timestamp - ISO timestamp string
+ * @returns Formatted time in 12-hour format
+ */
+export const formatTimeOfDay = (timestamp: string): string => {
+  if (!timestamp) return "";
+
+  const date = new Date(timestamp);
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+
+  // Convert to 12-hour format
+  const isPM = hours >= 12;
+  const hour12 = hours % 12 || 12;
+  const minuteStr = minutes.toString().padStart(2, "0");
+
+  return `${hour12}:${minuteStr} ${isPM ? "PM" : "AM"}`;
+};
+
+/**
  * Counts the number of unique days that have at least one session
  * @param sessions - Array of session objects with date property (ISO timestamp)
  * @param startDate - Optional start date to filter from
@@ -36,17 +56,17 @@ export const countUniquePracticeDays = (
 };
 
 /**
- * Gets the hour of day from a session's date timestamp
+ * Gets the UTC hour of day from a session's date timestamp
  * @param session - Session object with ISO timestamp in date field
- * @returns Hour (0-23)
+ * @returns Hour (0-23) in UTC
  */
 export const getSessionHour = (session: { date: string }): number => {
   const date = new Date(session.date);
-  return date.getHours();
+  return date.getUTCHours();
 };
 
 /**
- * Gets the time period of day from a session's date timestamp
+ * Gets the time period of day from a session's date timestamp (UTC)
  * @param session - Session object with ISO timestamp in date field
  * @returns "Morning" (5-12), "Afternoon" (12-17), "Evening" (17-21), "Night" (21-5)
  */

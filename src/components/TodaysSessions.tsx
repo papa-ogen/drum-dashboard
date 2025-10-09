@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useExercises, useSessions } from "../utils/api";
 import { useSegmentContext } from "../hooks/useSegmentContext";
-import { formatDate } from "../utils";
+import { formatTimeOfDay } from "../utils";
 
 const TodaysSessions = () => {
   const { sessions } = useSessions();
@@ -64,15 +64,6 @@ const TodaysSessions = () => {
     return `${hours}h ${remainingMinutes}m`;
   };
 
-  const getTimeOfDay = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
   if (!sessions || !exercises) return null;
 
   return (
@@ -109,7 +100,7 @@ const TodaysSessions = () => {
                   {session.exerciseName}
                 </h3>
                 <span className="text-xs text-gray-400">
-                  {getTimeOfDay(session.date)}
+                  {formatTimeOfDay(session.date)}
                 </span>
               </div>
 
