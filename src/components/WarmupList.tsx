@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import Modal from "./Modal";
 import MetronomeEngine from "./MetronomeEngine";
+import DrumNotation from "./DrumNotation";
 import { useExercises } from "../utils/api";
 import type { IExercise } from "../type";
 
@@ -83,6 +84,17 @@ const WarmupList = () => {
           <p className="text-gray-300 mb-6">
             {selectedWarmup.description || "Warm-up exercise"}
           </p>
+
+          {/* Drum Notation */}
+          {(selectedWarmup.stickingPattern || selectedWarmup.notation) && (
+            <div className="mb-6">
+              <DrumNotation
+                pattern={selectedWarmup.stickingPattern}
+                notation={selectedWarmup.notation}
+                noteCount={8}
+              />
+            </div>
+          )}
 
           {/* Warmup Details */}
           <div className="grid grid-cols-2 gap-4 mb-6">

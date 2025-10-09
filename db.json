@@ -876,7 +876,30 @@
       "segmentId": "segment-1",
       "type": "segment",
       "defaultBpm": 100,
-      "defaultDuration": 360
+      "defaultDuration": 360,
+      "description": "Basic coordination: Bass drum and snare pattern",
+      "notation": [
+        [
+          { "drum": "snare", "hand": "R" },
+          { "drum": "hihat", "hand": "L" }
+        ],
+        [{ "drum": "bass", "foot": "R" }],
+        [
+          { "drum": "snare", "hand": "L" },
+          { "drum": "hihat", "hand": "R" }
+        ],
+        [{ "drum": "bass", "foot": "R" }],
+        [
+          { "drum": "snare", "hand": "R", "accent": true },
+          { "drum": "hihat", "hand": "L" }
+        ],
+        [{ "drum": "bass", "foot": "R" }],
+        [
+          { "drum": "snare", "hand": "L" },
+          { "drum": "hihat", "hand": "R" }
+        ],
+        [{ "drum": "bass", "foot": "R" }]
+      ]
     },
     {
       "id": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
@@ -972,7 +995,8 @@
       "type": "warmup",
       "description": "Alternate right and left hand single strokes. Focus on evenness and relaxation.",
       "defaultDuration": 300,
-      "defaultBpm": 80
+      "defaultBpm": 80,
+      "stickingPattern": "RLRL"
     },
     {
       "id": "warmup-doubles",
@@ -980,7 +1004,8 @@
       "type": "warmup",
       "description": "Two strokes per hand (RR-LL-RR-LL). Build control and finger technique.",
       "defaultDuration": 300,
-      "defaultBpm": 70
+      "defaultBpm": 70,
+      "stickingPattern": "RRLL"
     },
     {
       "id": "warmup-paradiddles",
@@ -988,7 +1013,8 @@
       "type": "warmup",
       "description": "RLRR-LRLL pattern. Classic warm-up for coordination and flow.",
       "defaultDuration": 300,
-      "defaultBpm": 60
+      "defaultBpm": 60,
+      "stickingPattern": "RLRR-LRLL"
     },
     {
       "id": "warmup-accents",
@@ -996,7 +1022,8 @@
       "type": "warmup",
       "description": "Practice dynamic control with accented notes. Focus on contrast.",
       "defaultDuration": 300,
-      "defaultBpm": 70
+      "defaultBpm": 70,
+      "stickingPattern": "R-L-R-L"
     }
   ],
   "segments": [

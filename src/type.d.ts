@@ -8,14 +8,33 @@ export interface ISegment {
 
 export type ExerciseType = "warmup" | "segment" | "cooldown" | "challenge";
 
+export type DrumVoice =
+  | "snare"
+  | "bass"
+  | "hihat"
+  | "tom1"
+  | "tom2"
+  | "tom3"
+  | "ride"
+  | "crash";
+
+export interface DrumNote {
+  drum: DrumVoice;
+  hand?: "R" | "L"; // For hands/sticks
+  foot?: "R" | "L"; // For bass drum/hi-hat pedal
+  accent?: boolean; // Accented note
+}
+
 export interface IExercise {
   id: string;
   name: string;
   type: ExerciseType;
   segmentId?: string; // Only for type: "segment"
   description?: string;
-  defaultDuration: number;
-  defaultBpm: number;
+  defaultDuration?: number;
+  defaultBpm?: number;
+  stickingPattern?: string; // Simple pattern like "RLRR-LRLL" (for backwards compatibility)
+  notation?: DrumNote[][]; // Advanced notation: array of beats, each beat can have multiple simultaneous notes
 }
 
 export interface ISession {
