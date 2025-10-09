@@ -13,6 +13,9 @@ export interface IExercise {
   name: string;
   type: ExerciseType;
   segmentId?: string; // Only for type: "segment"
+  description?: string;
+  defaultDuration: number;
+  defaultBpm: number;
 }
 
 export interface ISession {
