@@ -14,7 +14,12 @@ const ExerciseInfoModal = ({
   exercise,
 }: ExerciseInfoModalProps) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={exercise.name}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={exercise.name}
+      maxWidth="lg"
+    >
       {exercise.description && (
         <p className="text-gray-300 mb-6">{exercise.description}</p>
       )}

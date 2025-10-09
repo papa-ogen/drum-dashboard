@@ -79,6 +79,7 @@ const WarmupList = () => {
           isOpen={!!selectedWarmup}
           onClose={handleCloseModal}
           title={selectedWarmup.name}
+          maxWidth="lg"
         >
           {/* Description */}
           <p className="text-gray-300 mb-6">
