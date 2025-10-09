@@ -17,6 +17,7 @@ import MetronomeEngine from "../MetronomeEngine";
 import DateTimeInput from "./DateTimeInput";
 import ExerciseSelect from "./ExerciseSelect";
 import BpmInput from "./BpmInput";
+import BpmProgressCheckbox from "./BpmProgressCheckbox";
 import TimeInput from "./TimeInput";
 
 const SessionLogger = () => {
@@ -50,6 +51,7 @@ const SessionLogger = () => {
   const [exercise, setExercise] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [timerDuration, setTimerDuration] = useState<number>(0);
+  const [readyForFaster, setReadyForFaster] = useState<boolean>(false);
 
   // Metronome state
   const [isMetronomePlaying, setIsMetronomePlaying] = useState<boolean>(false);
@@ -96,13 +98,21 @@ const SessionLogger = () => {
 
       if (exerciseSessions.length > 0) {
         const latestForExercise = exerciseSessions[exerciseSessions.length - 1];
-        setBpm(latestForExercise.bpm.toString());
+
+        // If last session was marked as ready for faster, increment BPM by 1
+        const newBpm = latestForExercise.readyForFaster
+          ? latestForExercise.bpm + 1
+          : latestForExercise.bpm;
+
+        setBpm(newBpm.toString());
         setTime((latestForExercise.time / 60).toString());
         setTimerDuration(latestForExercise.time);
+        setReadyForFaster(false); // Reset checkbox
       } else {
         setBpm("");
         setTime("");
         setTimerDuration(0);
+        setReadyForFaster(false);
       }
     }
   }, [exercise, sessions]);
@@ -172,6 +182,7 @@ const SessionLogger = () => {
       exercise,
       bpm: parseInt(bpm),
       time: parseInt(time) * 60,
+      readyForFaster,
     };
 
     try {
@@ -261,6 +272,11 @@ const SessionLogger = () => {
           exerciseId={exercise}
           sessions={sessions}
           onChange={setBpm}
+        />
+
+        <BpmProgressCheckbox
+          checked={readyForFaster}
+          onChange={setReadyForFaster}
         />
 
         <MetronomeEngine

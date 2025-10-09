@@ -20,7 +20,15 @@ const BpmInput = ({ bpm, exerciseId, sessions, onChange }: BpmInputProps) => {
     );
   };
 
+  const getLatestSession = () => {
+    if (!sessions || !exerciseId) return null;
+    const exerciseSessions = sessions.filter((s) => s.exercise === exerciseId);
+    if (exerciseSessions.length === 0) return null;
+    return exerciseSessions[exerciseSessions.length - 1];
+  };
+
   const highestSession = getHighestBpmSession();
+  const latestSession = getLatestSession();
 
   return (
     <div>
@@ -39,12 +47,19 @@ const BpmInput = ({ bpm, exerciseId, sessions, onChange }: BpmInputProps) => {
         placeholder="e.g., 120"
         className="w-full bg-gray-700 border-gray-600 text-white rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
       />
-      {highestSession && (
-        <p className="text-xs text-gray-400 mt-1">
-          Highest BPM for this exercise: {highestSession.bpm} (on{" "}
-          {formatDate(highestSession.date)})
-        </p>
-      )}
+      <div className="mt-1 space-y-1">
+        {latestSession?.readyForFaster && (
+          <p className="text-xs text-green-400">
+            🚀 BPM increased by +1 (you marked ready last time!)
+          </p>
+        )}
+        {highestSession && (
+          <p className="text-xs text-gray-400">
+            Highest BPM for this exercise: {highestSession.bpm} (on{" "}
+            {formatDate(highestSession.date)})
+          </p>
+        )}
+      </div>
     </div>
   );
 };

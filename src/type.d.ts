@@ -18,6 +18,7 @@ export interface ISession {
   exercise: string;
   bpm: number;
   time: number;
+  readyForFaster?: boolean; // Indicates user is ready to increase BPM next session
 }
 
 export type AchievementCategory =
