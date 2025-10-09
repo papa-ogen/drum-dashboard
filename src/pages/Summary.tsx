@@ -6,6 +6,7 @@ import {
   PracticeHeatmap,
   SegmentComparisonChart,
   SessionsOverTimeChart,
+  StreakStats,
   TimeDistributionChart,
   YearProgressBar,
   YearStats,
@@ -27,6 +28,9 @@ const Summary = () => {
 
       {/* Key Year Statistics */}
       <YearStats />
+
+      {/* Streak Statistics */}
+      <StreakStats />
 
       {/* Month-by-Month Analysis */}
       <MonthByMonthChart />

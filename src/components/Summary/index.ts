@@ -6,6 +6,7 @@ export { default as MonthComparison } from "./MonthComparison";
 export { default as PracticeHeatmap } from "./PracticeHeatmap";
 export { default as SegmentComparisonChart } from "./SegmentComparisonChart";
 export { default as SessionsOverTimeChart } from "./SessionsOverTimeChart";
+export { default as StreakStats } from "./StreakStats";
 export { default as TimeDistributionChart } from "./TimeDistributionChart";
 export { default as YearProgressBar } from "./YearProgressBar";
 export { default as YearStats } from "./YearStats";
