@@ -6,6 +6,7 @@ export { default as ExerciseInfoModal } from "./ExerciseInfoModal";
 export { default as Header } from "./Header";
 export { default as KeyStats } from "./KeyStats/KeyStats";
 export { default as Metronome } from "./Metronome";
+export { default as MetronomeButton } from "./MetronomeButton";
 export { default as MetronomeEngine } from "./MetronomeEngine";
 export { default as Modal } from "./Modal";
 export { default as SegmentProgress } from "./SegmentProgress";

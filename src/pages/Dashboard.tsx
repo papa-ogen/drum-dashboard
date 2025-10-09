@@ -1,5 +1,5 @@
 import {
-  Metronome,
+  MetronomeButton,
   SegmentProgress,
   SegmentSelector,
   SessionLogger,
@@ -23,7 +23,7 @@ const Dashboard = () => {
           <MonthComparison />
         </div>
         <div className="space-y-4">
-          <Metronome />
+          <MetronomeButton />
           <WarmupList />
         </div>
       </main>
