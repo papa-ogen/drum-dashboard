@@ -877,40 +877,80 @@
       "type": "segment",
       "defaultBpm": 100,
       "defaultDuration": 360,
-      "description": "Basic coordination: Bass drum and snare pattern",
+      "description": "Bass drum endurance: 8th notes (R foot → L foot) then double bass 16ths",
       "notation": [
-        {
-          "notes": [
-            { "drum": "snare", "hand": "R" },
-            { "drum": "hihat", "hand": "L" }
-          ],
-          "value": "8th"
-        },
         { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        {
-          "notes": [
-            { "drum": "snare", "hand": "L" },
-            { "drum": "hihat", "hand": "R" }
-          ],
-          "value": "8th"
-        },
         { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        {
-          "notes": [
-            { "drum": "snare", "hand": "R", "accent": true },
-            { "drum": "hihat", "hand": "L" }
-          ],
-          "value": "8th"
-        },
         { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
+        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
         {
           "notes": [
-            { "drum": "snare", "hand": "L" },
-            { "drum": "hihat", "hand": "R" }
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
           ],
-          "value": "8th"
+          "value": "16th"
         },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" }
+        {
+          "notes": [
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            { "drum": "bass", "foot": "L" },
+            { "drum": "bass", "foot": "R" }
+          ],
+          "value": "16th"
+        }
       ]
     },
     {

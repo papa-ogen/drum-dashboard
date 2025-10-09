@@ -18,7 +18,7 @@ const ExerciseInfoModal = ({
       isOpen={isOpen}
       onClose={onClose}
       title={exercise.name}
-      maxWidth="lg"
+      maxWidth="xl"
     >
       {exercise.description && (
         <p className="text-gray-300 mb-6">{exercise.description}</p>
