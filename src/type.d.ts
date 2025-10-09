@@ -6,10 +6,13 @@ export interface ISegment {
   endDate?: string;
 }
 
+export type ExerciseType = "warmup" | "segment" | "cooldown" | "challenge";
+
 export interface IExercise {
   id: string;
   name: string;
-  segmentId: string;
+  type: ExerciseType;
+  segmentId?: string; // Only for type: "segment"
 }
 
 export interface ISession {

@@ -16,10 +16,12 @@ const ExerciseSelect = ({
   exercisesBySegment,
   onChange,
 }: ExerciseSelectProps) => {
-  // Filter exercises by selected segment
+  // Filter exercises by selected segment (only segment-type exercises)
   const filteredExercises = selectedSegment
-    ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
-    : exercises;
+    ? exercises.filter(
+        (ex) => ex.type === "segment" && ex.segmentId === selectedSegment.id
+      )
+    : exercises.filter((ex) => ex.type === "segment");
 
   return (
     <div>

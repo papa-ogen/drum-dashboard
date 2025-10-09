@@ -202,8 +202,11 @@ const SessionLogger = () => {
       // Auto-advance to next exercise
       if (exercises) {
         const filteredExercises = selectedSegment
-          ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
-          : exercises;
+          ? exercises.filter(
+              (ex) =>
+                ex.type === "segment" && ex.segmentId === selectedSegment.id
+            )
+          : exercises.filter((ex) => ex.type === "segment");
 
         const currentIndex = filteredExercises.findIndex(
           (e) => e.id === exercise
@@ -239,10 +242,12 @@ const SessionLogger = () => {
   }
   if (!sessions || !exercises || !segments) return <div>No data</div>;
 
-  // Prepare data for ExerciseSelect
+  // Prepare data for ExerciseSelect (only segment exercises)
   const filteredExercises = selectedSegment
-    ? exercises.filter((ex) => ex.segmentId === selectedSegment.id)
-    : exercises;
+    ? exercises.filter(
+        (ex) => ex.type === "segment" && ex.segmentId === selectedSegment.id
+      )
+    : exercises.filter((ex) => ex.type === "segment");
   const exercisesBySegment = getExercisesBySegment(filteredExercises, segments);
 
   return (

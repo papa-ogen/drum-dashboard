@@ -4,6 +4,7 @@ import {
   SegmentSelector,
   SessionLogger,
   TodaysSessions,
+  WarmupList,
 } from "../components";
 import { MonthComparison } from "../components/Summary";
 
@@ -21,8 +22,9 @@ const Dashboard = () => {
           <TodaysSessions />
           <MonthComparison />
         </div>
-        <div>
+        <div className="space-y-4">
           <Metronome />
+          <WarmupList />
         </div>
       </main>
     </>

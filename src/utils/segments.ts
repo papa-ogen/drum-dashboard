@@ -16,7 +16,7 @@ export function getExercisesBySegment(
 
   sortedSegments.forEach((segment) => {
     const segmentExercises = exercises.filter(
-      (ex) => ex.segmentId === segment.id
+      (ex) => ex.type === "segment" && ex.segmentId === segment.id
     );
     if (segmentExercises.length > 0) {
       grouped.set(segment, segmentExercises);
@@ -34,7 +34,9 @@ export function getExercisesForSegment(
   segmentId: string
 ): IExercise[] {
   if (!exercises) return [];
-  return exercises.filter((ex) => ex.segmentId === segmentId);
+  return exercises.filter(
+    (ex) => ex.type === "segment" && ex.segmentId === segmentId
+  );
 }
 
 /**
