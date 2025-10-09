@@ -27,6 +27,18 @@ export const formatTimeOfDay = (timestamp: string): string => {
 };
 
 /**
+ * Formats an hour (0-23) to 12-hour format (e.g., "4 PM", "10 AM")
+ * @param hour - Hour in 24-hour format (0-23)
+ * @returns Formatted hour in 12-hour format
+ */
+export const formatHour = (hour: number): string => {
+  if (hour === 0) return "12 AM";
+  if (hour === 12) return "12 PM";
+  if (hour < 12) return `${hour} AM`;
+  return `${hour - 12} PM`;
+};
+
+/**
  * Counts the number of unique days that have at least one session
  * @param sessions - Array of session objects with date property (ISO timestamp)
  * @param startDate - Optional start date to filter from

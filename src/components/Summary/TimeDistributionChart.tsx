@@ -9,6 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { useSessions } from "../../utils/api";
+import { formatHour } from "../../utils";
 
 const TimeDistributionChart = () => {
   const { sessions } = useSessions();
@@ -24,13 +25,6 @@ const TimeDistributionChart = () => {
       const hour = date.getUTCHours(); // Use UTC hours to match the stored timestamp
       hourMap[hour] = (hourMap[hour] || 0) + 1;
     });
-
-    const formatHour = (hour: number): string => {
-      if (hour === 0) return "12 AM";
-      if (hour === 12) return "12 PM";
-      if (hour < 12) return `${hour} AM`;
-      return `${hour - 12} PM`;
-    };
 
     // Create data for all 24 hours
     return Array.from({ length: 24 }, (_, hour) => ({
