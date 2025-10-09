@@ -24,13 +24,9 @@ const ExerciseInfoModal = ({
         <p className="text-gray-300 mb-6">{exercise.description}</p>
       )}
 
-      {(exercise.stickingPattern || exercise.notation) && (
+      {exercise.notation && (
         <div className="mb-6">
-          <DrumNotation
-            pattern={exercise.stickingPattern}
-            notation={exercise.notation}
-            noteCount={8}
-          />
+          <DrumNotation notation={exercise.notation} />
         </div>
       )}
 

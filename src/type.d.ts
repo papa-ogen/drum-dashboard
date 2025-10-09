@@ -18,11 +18,26 @@ export type DrumVoice =
   | "ride"
   | "crash";
 
+export type NoteValue =
+  | "whole" // 1 beat (4/4)
+  | "half" // 1/2 beat
+  | "quarter" // 1/4 beat
+  | "8th" // 1/8 beat
+  | "16th" // 1/16 beat
+  | "32nd" // 1/32 beat
+  | "triplet"; // Triplet subdivision
+
 export interface DrumNote {
   drum: DrumVoice;
   hand?: "R" | "L"; // For hands/sticks
   foot?: "R" | "L"; // For bass drum/hi-hat pedal
   accent?: boolean; // Accented note
+  ghost?: boolean; // Ghost note (quiet)
+}
+
+export interface NotatedBeat {
+  notes: DrumNote[]; // Can have multiple drums hit simultaneously
+  value: NoteValue; // Note duration/subdivision
 }
 
 export interface IExercise {
@@ -33,8 +48,7 @@ export interface IExercise {
   description?: string;
   defaultDuration?: number;
   defaultBpm?: number;
-  stickingPattern?: string; // Simple pattern like "RLRR-LRLL" (for backwards compatibility)
-  notation?: DrumNote[][]; // Advanced notation: array of beats, each beat can have multiple simultaneous notes
+  notation?: NotatedBeat[]; // Drum notation with note values and subdivisions
 }
 
 export interface ISession {

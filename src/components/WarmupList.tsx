@@ -87,13 +87,9 @@ const WarmupList = () => {
           </p>
 
           {/* Drum Notation */}
-          {(selectedWarmup.stickingPattern || selectedWarmup.notation) && (
+          {selectedWarmup.notation && (
             <div className="mb-6">
-              <DrumNotation
-                pattern={selectedWarmup.stickingPattern}
-                notation={selectedWarmup.notation}
-                noteCount={8}
-              />
+              <DrumNotation notation={selectedWarmup.notation} />
             </div>
           )}
 
