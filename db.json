@@ -996,7 +996,16 @@
       "description": "Alternate right and left hand single strokes. Focus on evenness and relaxation.",
       "defaultDuration": 300,
       "defaultBpm": 80,
-      "stickingPattern": "RLRL"
+      "notation": [
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }]
+      ]
     },
     {
       "id": "warmup-doubles",
@@ -1005,7 +1014,16 @@
       "description": "Two strokes per hand (RR-LL-RR-LL). Build control and finger technique.",
       "defaultDuration": 300,
       "defaultBpm": 70,
-      "stickingPattern": "RRLL"
+      "notation": [
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "L" }]
+      ]
     },
     {
       "id": "warmup-paradiddles",
@@ -1014,7 +1032,16 @@
       "description": "RLRR-LRLL pattern. Classic warm-up for coordination and flow.",
       "defaultDuration": 300,
       "defaultBpm": 60,
-      "stickingPattern": "RLRR-LRLL"
+      "notation": [
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "L" }]
+      ]
     },
     {
       "id": "warmup-accents",
@@ -1023,7 +1050,16 @@
       "description": "Practice dynamic control with accented notes. Focus on contrast.",
       "defaultDuration": 300,
       "defaultBpm": 70,
-      "stickingPattern": "R-L-R-L"
+      "notation": [
+        [{ "drum": "snare", "hand": "R", "accent": true }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R", "accent": true }],
+        [{ "drum": "snare", "hand": "L" }],
+        [{ "drum": "snare", "hand": "R" }],
+        [{ "drum": "snare", "hand": "L" }]
+      ]
     }
   ],
   "segments": [
