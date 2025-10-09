@@ -7,6 +7,20 @@ export const formatDate = (dateString: string) => {
 };
 
 /**
+ * Formats a date to full format (e.g., "October 9, 2025")
+ * @param date - Date object or ISO timestamp string
+ * @returns Formatted date string
+ */
+export const formatFullDate = (date: Date | string): string => {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+/**
  * Formats a UTC timestamp to time of day (e.g., "4:00 PM")
  * @param timestamp - ISO timestamp string
  * @returns Formatted time in 12-hour format

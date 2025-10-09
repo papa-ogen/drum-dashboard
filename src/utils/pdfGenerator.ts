@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 
 export const generatePracticeReportFromElement = async (
   elementId: string = "printable-report"
@@ -10,29 +10,44 @@ export const generatePracticeReportFromElement = async (
     throw new Error(`Element with id "${elementId}" not found`);
   }
 
-  try {
-    // Small delay to ensure styles are fully applied
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  console.log("Found element:", element);
+  console.log(
+    "Element dimensions:",
+    element.offsetWidth,
+    "x",
+    element.offsetHeight
+  );
 
-    // Capture the entire report as a high-quality image
+  try {
+    console.log("Starting html2canvas-pro capture...");
+
+    // Capture with html2canvas-pro (supports modern CSS like oklch/oklab)
     const canvas = await html2canvas(element, {
       scale: 2,
       backgroundColor: "#111827",
-      logging: true, // Enable logging to see what's happening
+      logging: false,
       useCORS: true,
       allowTaint: true,
-      foreignObjectRendering: false,
-      imageTimeout: 15000,
-      windowWidth: 1200,
-      windowHeight: element.scrollHeight,
     });
 
+    console.log("Canvas created:", canvas.width, "x", canvas.height);
+
     const imgData = canvas.toDataURL("image/png");
+    console.log("Image data created, length:", imgData.length);
 
     // Create PDF in landscape if content is wide, portrait otherwise
     const imgWidth = canvas.width;
     const imgHeight = canvas.height;
     const aspectRatio = imgWidth / imgHeight;
+
+    console.log(
+      "Creating PDF with dimensions:",
+      imgWidth,
+      "x",
+      imgHeight,
+      "aspect:",
+      aspectRatio
+    );
 
     // Use A4 dimensions
     const pdf = new jsPDF({
@@ -113,8 +128,14 @@ export const generatePracticeReportFromElement = async (
       new Date().toISOString().split("T")[0]
     }.pdf`;
     pdf.save(fileName);
+
+    console.log("PDF saved successfully!");
   } catch (error) {
     console.error("Failed to generate PDF:", error);
+    if (error instanceof Error) {
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
     throw error;
   }
 };
