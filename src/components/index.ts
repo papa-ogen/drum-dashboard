@@ -2,6 +2,7 @@ export { default as AlbumSearch } from "./AlbumSearch";
 export { default as BpmChart } from "./BpmChart";
 export { default as ChartContainer } from "./ChartContainer";
 export { default as DrumNotation } from "./DrumNotation";
+export { default as ExerciseInfoModal } from "./ExerciseInfoModal";
 export { default as Header } from "./Header";
 export { default as KeyStats } from "./KeyStats/KeyStats";
 export { default as Metronome } from "./Metronome";
