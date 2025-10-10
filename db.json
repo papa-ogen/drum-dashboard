@@ -867,6 +867,38 @@
       "bpm": 128,
       "time": 360,
       "id": "d39f684e-5a10-4fdf-b42d-610d2f6124e0"
+    },
+    {
+      "date": "2025-10-09T14:59:00.000Z",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 136,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "3a75ebb3-fa8e-4c33-a93d-58fba9e7c914"
+    },
+    {
+      "date": "2025-10-09T14:59:00.000Z",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 137,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "b2721bb0-77fb-4c73-ae69-bb9333daaa9b"
+    },
+    {
+      "date": "2025-10-09T15:22:00.000Z",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 107,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "e7dcce32-7181-4087-8152-b9b9d694cde5"
+    },
+    {
+      "date": "2025-10-09T15:29:00.000Z",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 128,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "28ed0557-3600-4320-9ee6-483ee2be1f71"
     }
   ],
   "exercises": [
@@ -879,75 +911,251 @@
       "defaultDuration": 360,
       "description": "Bass drum endurance: 8th notes (R foot → L foot) then double bass 16ths",
       "notation": [
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "bass", "foot": "L" }], "value": "8th" },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         },
         {
           "notes": [
-            { "drum": "bass", "foot": "L" },
-            { "drum": "bass", "foot": "R" }
+            {
+              "drum": "bass",
+              "foot": "L"
+            },
+            {
+              "drum": "bass",
+              "foot": "R"
+            }
           ],
           "value": "16th"
         }
@@ -1049,14 +1257,78 @@
       "defaultDuration": 300,
       "defaultBpm": 80,
       "notation": [
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" }
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        }
       ]
     },
     {
@@ -1067,14 +1339,78 @@
       "defaultDuration": 300,
       "defaultBpm": 70,
       "notation": [
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" }
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        }
       ]
     },
     {
@@ -1085,14 +1421,78 @@
       "defaultDuration": 300,
       "defaultBpm": 60,
       "notation": [
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "16th" }
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "16th"
+        }
       ]
     },
     {
@@ -1104,19 +1504,79 @@
       "defaultBpm": 70,
       "notation": [
         {
-          "notes": [{ "drum": "snare", "hand": "R", "accent": true }],
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R",
+              "accent": true
+            }
+          ],
           "value": "8th"
         },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "8th" },
         {
-          "notes": [{ "drum": "snare", "hand": "R", "accent": true }],
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
           "value": "8th"
         },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "8th" },
-        { "notes": [{ "drum": "snare", "hand": "R" }], "value": "8th" },
-        { "notes": [{ "drum": "snare", "hand": "L" }], "value": "8th" }
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R",
+              "accent": true
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "R"
+            }
+          ],
+          "value": "8th"
+        },
+        {
+          "notes": [
+            {
+              "drum": "snare",
+              "hand": "L"
+            }
+          ],
+          "value": "8th"
+        }
       ]
     }
   ],
