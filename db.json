@@ -899,6 +899,38 @@
       "time": 360,
       "readyForFaster": false,
       "id": "28ed0557-3600-4320-9ee6-483ee2be1f71"
+    },
+    {
+      "date": "2025-10-10T09:53:00.000Z",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 136,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "f392ed2c-cd5e-45bc-ab2d-e123f6edd33e"
+    },
+    {
+      "date": "2025-10-10T09:53:00.000Z",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 137,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "1b681b33-5ec6-41b2-a409-a2b5fc0a45a7"
+    },
+    {
+      "date": "2025-10-10T09:53:00.000Z",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 107,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "edd6d030-9ba6-46ba-be94-ed85e7af7a25"
+    },
+    {
+      "date": "2025-10-10T09:53:00.000Z",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 128,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "0ec3e877-e26f-44d0-9348-583352d93e4e"
     }
   ],
   "exercises": [
