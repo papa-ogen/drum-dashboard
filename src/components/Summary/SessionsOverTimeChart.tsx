@@ -25,22 +25,30 @@ const SessionsOverTimeChart = () => {
       ? new Date(firstSegment.startDate)
       : new Date();
 
+    // Adjust to the Monday of the week containing startDate (week starts Monday)
+    const adjustedStartDate = new Date(startDate);
+    const dayOfWeek = adjustedStartDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If Sunday, go back 6 days; otherwise go to Monday
+    adjustedStartDate.setDate(adjustedStartDate.getDate() + daysToMonday);
+    adjustedStartDate.setHours(0, 0, 0, 0); // Set to start of day
+
     const today = new Date();
 
     // Calculate number of weeks
     const daysDiff = Math.ceil(
-      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      (today.getTime() - adjustedStartDate.getTime()) / (1000 * 60 * 60 * 24)
     );
     const numWeeks = Math.ceil(daysDiff / 7);
 
     // Generate data for each week
     const data = [];
     for (let week = 0; week < numWeeks; week++) {
-      const weekStartDate = new Date(startDate);
-      weekStartDate.setDate(startDate.getDate() + week * 7);
+      const weekStartDate = new Date(adjustedStartDate);
+      weekStartDate.setDate(adjustedStartDate.getDate() + week * 7);
 
       const weekEndDate = new Date(weekStartDate);
       weekEndDate.setDate(weekStartDate.getDate() + 6);
+      weekEndDate.setHours(23, 59, 59, 999); // Set to end of day to include all sessions on the last day
 
       const weekLabel = weekStartDate.toLocaleDateString("en-US", {
         month: "short",

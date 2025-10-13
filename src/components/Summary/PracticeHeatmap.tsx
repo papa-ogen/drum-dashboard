@@ -32,8 +32,9 @@ const PracticeHeatmap = () => {
       (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
     );
 
-    // Get the day of week for the first day to calculate proper week numbers
-    const firstDayOfWeek = startDate.getDay();
+    // Get the day of week for the first day (Monday-based: 0=Mon, 6=Sun)
+    const rawDayOfWeek = startDate.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+    const firstDayOfWeek = rawDayOfWeek === 0 ? 6 : rawDayOfWeek - 1; // Convert to Monday-based
 
     // Generate array from start date to today (inclusive)
     const days = [];
@@ -53,10 +54,14 @@ const PracticeHeatmap = () => {
       const daysSinceStart = i + firstDayOfWeek;
       const weekNumber = Math.floor(daysSinceStart / 7);
 
+      // Convert dayOfWeek to Monday-based (0=Mon, 6=Sun)
+      const rawDay = currentDate.getDay();
+      const mondayBasedDay = rawDay === 0 ? 6 : rawDay - 1;
+
       days.push({
         date: dateStr,
         practiceTime,
-        dayOfWeek: currentDate.getDay(),
+        dayOfWeek: mondayBasedDay,
         weekNumber,
       });
     }
@@ -86,10 +91,10 @@ const PracticeHeatmap = () => {
 
     const weekMap = new Map<number, typeof heatmapData>();
 
-    // Pad the beginning if first day is not Sunday
+    // Pad the beginning if first day is not Monday
     const firstDay = heatmapData[0];
     if (firstDay && firstDay.dayOfWeek !== 0) {
-      // Add empty days before the first actual day
+      // Add empty days before the first actual day (Monday-based: 0=Mon)
       for (let i = 0; i < firstDay.dayOfWeek; i++) {
         const emptyDay = {
           date: "",
@@ -132,7 +137,7 @@ const PracticeHeatmap = () => {
     return labels;
   }, [heatmapData]);
 
-  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   if (!sessions || !exercises || !segments) return null;
 

@@ -188,7 +188,7 @@ function calculateLongestStreak(sessions: ISession[]): number {
 }
 
 /**
- * Check if user completed all exercises in any single week
+ * Check if user completed all exercises in any single week (Monday-based)
  */
 function checkPerfectWeek(sessions: ISession[]): boolean {
   const weekMap: Record<string, Set<string>> = {};
@@ -196,7 +196,11 @@ function checkPerfectWeek(sessions: ISession[]): boolean {
   sessions.forEach((session) => {
     const date = new Date(session.date);
     const weekStart = new Date(date);
-    weekStart.setDate(date.getDate() - date.getDay());
+    // Calculate Monday-based week start
+    const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If Sunday, go back 6 days
+    weekStart.setDate(date.getDate() + daysToMonday);
+    weekStart.setHours(0, 0, 0, 0);
     const weekKey = weekStart.toISOString().split("T")[0];
 
     if (!weekMap[weekKey]) {
