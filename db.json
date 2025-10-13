@@ -931,6 +931,102 @@
       "time": 360,
       "readyForFaster": false,
       "id": "0ec3e877-e26f-44d0-9348-583352d93e4e"
+    },
+    {
+      "date": "2025-10-11T11:20:00.000Z",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 137,
+      "time": 360,
+      "readyForFaster": true,
+      "id": "b1d13b1d-6e80-4312-9e07-1ecc23965482"
+    },
+    {
+      "date": "2025-10-11T11:20:00.000Z",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 108,
+      "time": 360,
+      "readyForFaster": true,
+      "id": "5f5b75ee-6f0d-4725-bf16-8593a723b754"
+    },
+    {
+      "date": "2025-10-11T11:20:00.000Z",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 136,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "e2b4009b-c82a-4ca9-abf6-498d0163e40b"
+    },
+    {
+      "date": "2025-10-11T11:20:00.000Z",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 128,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "bf9074a9-0aba-4f90-9a4f-476d3b99d43c"
+    },
+    {
+      "date": "2025-10-12T16:17:00.000Z",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 136,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "b26e1655-9faa-4e05-be1f-71220ffc21aa"
+    },
+    {
+      "date": "2025-10-12T16:17:00.000Z",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 138,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "f7e78131-837c-47bf-8ede-31488053b76f"
+    },
+    {
+      "date": "2025-10-12T16:17:00.000Z",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 109,
+      "time": 360,
+      "readyForFaster": true,
+      "id": "33488737-e465-4339-9ce5-e53fe9e89e00"
+    },
+    {
+      "date": "2025-10-12T16:42:00.000Z",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 128,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "70cf5e01-a728-400b-8741-45a0181ecae6"
+    },
+    {
+      "date": "2025-10-13T08:43:00.000Z",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 137,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "fdcf4f86-5769-4ce1-8199-581cde738ef5"
+    },
+    {
+      "date": "2025-10-13T08:43:00.000Z",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 138,
+      "time": 360,
+      "readyForFaster": false,
+      "id": "ccc61ea3-0342-469c-b910-f2cf5881d2e3"
+    },
+    {
+      "date": "2025-10-13T08:43:00.000Z",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 110,
+      "time": 360,
+      "readyForFaster": true,
+      "id": "e16df554-5b2c-4b81-a008-c6513e319704"
+    },
+    {
+      "date": "2025-10-13T08:43:00.000Z",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 128,
+      "time": 360,
+      "readyForFaster": true,
+      "id": "f57de00b-7777-4a68-84c0-0032baf9d713"
     }
   ],
   "exercises": [
