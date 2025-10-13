@@ -114,6 +114,9 @@ const SessionLogger = () => {
         setTimerDuration(0);
         setReadyForFaster(false);
       }
+
+      // Update time to current time when exercise changes
+      setTimeOfDay(new Date().toTimeString().slice(0, 5));
     }
   }, [exercise, sessions]);
 
