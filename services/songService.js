@@ -1,7 +1,6 @@
 // services/songService.js
 import {
-  getSpotifyRecommendations,
-  searchSpotifyTracks,
+  getSongRecommendations,
   isSpotifyConfigured,
 } from "./spotifyService.js";
 
@@ -64,7 +63,7 @@ function generateRandomDuration() {
 }
 
 /**
- * Get songs by BPM using Spotify API with fallback to mock data
+ * Get songs by BPM using local data with Spotify fallback
  * @param {number} bpm - The BPM to search for
  * @param {number} limit - Maximum number of songs to return
  * @returns {Promise<Array>} Array of songs matching the BPM
@@ -81,25 +80,11 @@ export async function getSongsByBpm(bpm, limit = 10) {
   // Try Spotify API first if configured
   if (isSpotifyConfigured()) {
     try {
-      console.log(`Fetching songs from Spotify for BPM: ${bpm}`);
-
-      // Try recommendations first (more accurate BPM matching)
-      let songs = await getSpotifyRecommendations(bpm, limit);
-
-      // If we don't get enough songs, try search as backup
-      if (songs.length < limit) {
-        console.log(
-          `Only got ${songs.length} songs from recommendations, trying search...`
-        );
-        const searchResults = await searchSpotifyTracks(
-          bpm,
-          limit - songs.length
-        );
-        songs = [...songs, ...searchResults];
-      }
+      console.log(`Fetching songs for BPM: ${bpm}`);
+      const songs = await getSongRecommendations(bpm, limit);
 
       if (songs.length > 0) {
-        console.log(`Successfully fetched ${songs.length} songs from Spotify`);
+        console.log(`Successfully fetched ${songs.length} songs`);
         return songs.slice(0, limit);
       }
     } catch (error) {

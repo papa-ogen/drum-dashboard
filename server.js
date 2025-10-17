@@ -7,6 +7,17 @@ import dotenv from "dotenv";
 // Load environment variables
 dotenv.config();
 
+// Debug environment variables
+console.log("Environment check:");
+console.log(
+  "SPOTIFY_CLIENT_ID:",
+  process.env.SPOTIFY_CLIENT_ID ? "SET" : "NOT SET"
+);
+console.log(
+  "SPOTIFY_CLIENT_SECRET:",
+  process.env.SPOTIFY_CLIENT_SECRET ? "SET" : "NOT SET"
+);
+
 // Import route handlers
 import { initializeSegments, getSegments } from "./routes/segments.js";
 import { initializeExercises, getExercises } from "./routes/exercises.js";

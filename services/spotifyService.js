@@ -1,7 +1,9 @@
 // services/spotifyService.js
 
+import { getSongsInBpmRange } from "../data/songs.js";
+
 /**
- * Service for interacting with Spotify Web API
+ * Service for interacting with Spotify Web API and local song data
  */
 
 let accessToken = null;
@@ -52,85 +54,82 @@ async function getAccessToken() {
 }
 
 /**
- * Get song recommendations from Spotify based on BPM
+ * Get songs from local data based on BPM range
  * @param {number} targetBpm - Target BPM
  * @param {number} limit - Number of songs to return
+ * @param {number} tolerance - BPM tolerance range (default: 10)
+ * @returns {Array} Array of song objects
+ */
+export function getSongsByBpm(targetBpm, limit = 10, tolerance = 10) {
+  const minBpm = Math.max(0, targetBpm - tolerance);
+  const maxBpm = targetBpm + tolerance;
+
+  const songsInRange = getSongsInBpmRange(minBpm, maxBpm);
+
+  // Shuffle and limit results
+  const shuffled = songsInRange.sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, limit);
+}
+
+/**
+ * Get song recommendations - tries local data first, falls back to Spotify tracks API
+ * @param {number} targetBpm - Target BPM
+ * @param {number} limit - Number of songs to return
+ * @param {number} tolerance - BPM tolerance range (default: 10)
  * @returns {Promise<Array>} Array of song objects
  */
-export async function getSpotifyRecommendations(targetBpm, limit = 10) {
-  try {
-    const token = await getAccessToken();
+export async function getSongRecommendations(
+  targetBpm,
+  limit = 10,
+  tolerance = 10
+) {
+  // First try local data
+  const localSongs = getSongsByBpm(targetBpm, limit, tolerance);
 
-    // Use popular genres as seed to get diverse recommendations
-    const seedGenres = ["pop", "rock", "electronic", "jazz", "funk"];
-    const randomGenre =
-      seedGenres[Math.floor(Math.random() * seedGenres.length)];
-
-    const params = new URLSearchParams({
-      seed_genres: randomGenre,
-      target_tempo: targetBpm.toString(),
-      limit: Math.min(limit, 20).toString(), // Spotify max is 20
-      market: "US",
-    });
-
-    const response = await fetch(
-      `https://api.spotify.com/v1/recommendations?${params}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+  if (localSongs.length > 0) {
+    console.log(
+      `Found ${localSongs.length} songs from local data for BPM ${targetBpm}`
     );
+    return localSongs;
+  }
 
-    if (!response.ok) {
-      throw new Error(`Spotify API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    return data.tracks.map((track) => ({
-      id: track.id,
-      title: track.name,
-      artist: track.artists.map((artist) => artist.name).join(", "),
-      bpm: Math.round(track.tempo || targetBpm), // Use actual tempo if available
-      genre: track.artists[0]?.genres?.[0] || "Unknown",
-      duration: formatDuration(track.duration_ms),
-      previewUrl: track.preview_url,
-      spotifyUrl: track.external_urls.spotify,
-      albumArt: track.album.images[0]?.url,
-      album: track.album.name,
-      popularity: track.popularity,
-    }));
+  // Fallback to Spotify tracks API if no local songs found
+  console.log(
+    `No local songs found for BPM ${targetBpm}, trying Spotify tracks...`
+  );
+  try {
+    return await getSpotifyTracks(targetBpm, limit);
   } catch (error) {
-    console.error("Error fetching Spotify recommendations:", error);
-    throw error;
+    console.error("Spotify tracks API failed:", error);
+    return [];
   }
 }
 
 /**
- * Search for tracks on Spotify and filter by BPM
+ * Get tracks from Spotify using track IDs from local data
  * @param {number} targetBpm - Target BPM
  * @param {number} limit - Number of songs to return
  * @returns {Promise<Array>} Array of song objects
  */
-export async function searchSpotifyTracks(targetBpm, limit = 10) {
+export async function getSpotifyTracks(targetBpm, limit = 10) {
   try {
     const token = await getAccessToken();
 
-    // Search for popular tracks
-    const searchTerms = ["popular", "hits", "classic", "trending"];
-    const randomTerm =
-      searchTerms[Math.floor(Math.random() * searchTerms.length)];
+    // Get songs with Spotify IDs from our local data
+    const songsWithIds = getSongsInBpmRange(targetBpm - 10, targetBpm + 10)
+      .filter((song) => song.spotifyId)
+      .slice(0, limit);
 
-    const params = new URLSearchParams({
-      q: randomTerm,
-      type: "track",
-      limit: "50", // Get more results to filter by BPM
-      market: "US",
-    });
+    if (songsWithIds.length === 0) {
+      console.log("No songs with Spotify IDs found for BPM", targetBpm);
+      return [];
+    }
+
+    // Get track IDs
+    const trackIds = songsWithIds.map((song) => song.spotifyId).join(",");
 
     const response = await fetch(
-      `https://api.spotify.com/v1/search?${params}`,
+      `https://api.spotify.com/v1/tracks?ids=${trackIds}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -139,57 +138,29 @@ export async function searchSpotifyTracks(targetBpm, limit = 10) {
     );
 
     if (!response.ok) {
-      throw new Error(`Spotify search error: ${response.statusText}`);
+      throw new Error(
+        `Spotify tracks API error: ${response.status} ${response.statusText}`
+      );
     }
 
     const data = await response.json();
-    const tracks = data.tracks.items;
 
-    // Get audio features for each track to filter by BPM
-    const trackIds = tracks.map((track) => track.id).join(",");
-    const featuresResponse = await fetch(
-      `https://api.spotify.com/v1/audio-features?ids=${trackIds}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (!featuresResponse.ok) {
-      throw new Error(`Spotify features error: ${featuresResponse.statusText}`);
-    }
-
-    const featuresData = await featuresResponse.json();
-
-    // Filter tracks by BPM (within ±10 BPM range)
-    const filteredTracks = tracks
-      .map((track, index) => ({
-        track,
-        features: featuresData.audio_features[index],
-      }))
-      .filter((item) => {
-        if (!item.features) return false;
-        const bpmDiff = Math.abs(item.features.tempo - targetBpm);
-        return bpmDiff <= 10; // Within 10 BPM
-      })
-      .slice(0, limit);
-
-    return filteredTracks.map((item) => ({
-      id: item.track.id,
-      title: item.track.name,
-      artist: item.track.artists.map((artist) => artist.name).join(", "),
-      bpm: Math.round(item.features.tempo),
-      genre: "Unknown", // Spotify doesn't provide genre in search results
-      duration: formatDuration(item.track.duration_ms),
-      previewUrl: item.track.preview_url,
-      spotifyUrl: item.track.external_urls.spotify,
-      albumArt: item.track.album.images[0]?.url,
-      album: item.track.album.name,
-      popularity: item.track.popularity,
-    }));
+    return data.tracks
+      .filter((track) => track) // Remove null tracks
+      .map((track) => ({
+        id: track.id,
+        title: track.name,
+        artist: track.artists.map((artist) => artist.name).join(", "),
+        bpm: songsWithIds.find((s) => s.spotifyId === track.id)?.bpm || 0,
+        duration: formatDuration(track.duration_ms),
+        previewUrl: track.preview_url,
+        spotifyUrl: track.external_urls.spotify,
+        albumArt: track.album.images[0]?.url,
+        album: track.album.name,
+        popularity: track.popularity,
+      }));
   } catch (error) {
-    console.error("Error searching Spotify tracks:", error);
+    console.error("Error fetching Spotify tracks:", error);
     throw error;
   }
 }
