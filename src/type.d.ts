@@ -99,3 +99,14 @@ export interface IUserAchievement {
   achievementId: string;
   unlockedAt: string; // ISO date when achievement was unlocked
 }
+
+export interface Song {
+  id: string;
+  title: string;
+  artist: string;
+  bpm: number;
+  genre: string;
+  duration: string;
+  previewUrl?: string;
+  spotifyUrl?: string;
+}

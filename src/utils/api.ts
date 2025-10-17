@@ -1,6 +1,12 @@
 import useSWR from "swr";
 import { fetcher } from "./fetcher";
-import type { ISession, IExercise, ISegment, IUserAchievement } from "../type";
+import type {
+  ISession,
+  IExercise,
+  ISegment,
+  IUserAchievement,
+  Song,
+} from "../type";
 
 // Use environment variable or default to localhost
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
@@ -11,6 +17,7 @@ export const API_ENDPOINTS = {
   EXERCISES: `${BASE_URL}/exercises`,
   SEGMENTS: `${BASE_URL}/segments`,
   ACHIEVEMENTS: `${BASE_URL}/achievements`,
+  SONGS: `${BASE_URL}/songs`,
 } as const;
 
 export function useSessions(): {
@@ -76,6 +83,26 @@ export function useUserAchievements(): {
 
   return {
     userAchievements: data,
+    isLoading,
+    isError: error,
+  };
+}
+
+export function useSongs(
+  bpm: number | null,
+  limit: number = 10
+): {
+  songs: Song[] | undefined;
+  isLoading: boolean;
+  isError: Error | undefined;
+} {
+  const { data, error, isLoading } = useSWR<Song[]>(
+    bpm ? `${API_ENDPOINTS.SONGS}?bpm=${bpm}&limit=${limit}` : null,
+    fetcher
+  );
+
+  return {
+    songs: data,
     isLoading,
     isError: error,
   };

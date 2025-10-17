@@ -118,6 +118,127 @@ app.post("/api/albums", async (req, res) => {
   res.status(201).json(newAlbum);
 });
 
+// --- Song Suggestions Routes ---
+app.get("/api/songs", async (req, res) => {
+  const { bpm, limit = 10 } = req.query;
+
+  if (!bpm) {
+    return res.status(400).json({ error: "BPM parameter is required." });
+  }
+
+  const targetBpm = parseInt(bpm);
+  const songLimit = parseInt(limit);
+
+  // Mock song data - in a real implementation, this would come from a music API
+  const mockSongs = [
+    {
+      id: "song-1",
+      title: "Song Title 1",
+      artist: "Artist Name 1",
+      bpm: targetBpm,
+      genre: "Rock",
+      duration: "3:45",
+      previewUrl: "https://example.com/preview1.mp3",
+      spotifyUrl: "https://open.spotify.com/track/1",
+    },
+    {
+      id: "song-2",
+      title: "Song Title 2",
+      artist: "Artist Name 2",
+      bpm: targetBpm,
+      genre: "Pop",
+      duration: "4:12",
+      previewUrl: "https://example.com/preview2.mp3",
+      spotifyUrl: "https://open.spotify.com/track/2",
+    },
+    {
+      id: "song-3",
+      title: "Song Title 3",
+      artist: "Artist Name 3",
+      bpm: targetBpm,
+      genre: "Electronic",
+      duration: "3:28",
+      previewUrl: "https://example.com/preview3.mp3",
+      spotifyUrl: "https://open.spotify.com/track/3",
+    },
+    {
+      id: "song-4",
+      title: "Song Title 4",
+      artist: "Artist Name 4",
+      bpm: targetBpm,
+      genre: "Jazz",
+      duration: "5:33",
+      previewUrl: "https://example.com/preview4.mp3",
+      spotifyUrl: "https://open.spotify.com/track/4",
+    },
+    {
+      id: "song-5",
+      title: "Song Title 5",
+      artist: "Artist Name 5",
+      bpm: targetBpm,
+      genre: "Funk",
+      duration: "4:01",
+      previewUrl: "https://example.com/preview5.mp3",
+      spotifyUrl: "https://open.spotify.com/track/5",
+    },
+    {
+      id: "song-6",
+      title: "Song Title 6",
+      artist: "Artist Name 6",
+      bpm: targetBpm,
+      genre: "Blues",
+      duration: "3:52",
+      previewUrl: "https://example.com/preview6.mp3",
+      spotifyUrl: "https://open.spotify.com/track/6",
+    },
+    {
+      id: "song-7",
+      title: "Song Title 7",
+      artist: "Artist Name 7",
+      bpm: targetBpm,
+      genre: "Metal",
+      duration: "4:18",
+      previewUrl: "https://example.com/preview7.mp3",
+      spotifyUrl: "https://open.spotify.com/track/7",
+    },
+    {
+      id: "song-8",
+      title: "Song Title 8",
+      artist: "Artist Name 8",
+      bpm: targetBpm,
+      genre: "Indie",
+      duration: "3:37",
+      previewUrl: "https://example.com/preview8.mp3",
+      spotifyUrl: "https://open.spotify.com/track/8",
+    },
+    {
+      id: "song-9",
+      title: "Song Title 9",
+      artist: "Artist Name 9",
+      bpm: targetBpm,
+      genre: "Alternative",
+      duration: "4:25",
+      previewUrl: "https://example.com/preview9.mp3",
+      spotifyUrl: "https://open.spotify.com/track/9",
+    },
+    {
+      id: "song-10",
+      title: "Song Title 10",
+      artist: "Artist Name 10",
+      bpm: targetBpm,
+      genre: "Country",
+      duration: "3:41",
+      previewUrl: "https://example.com/preview10.mp3",
+      spotifyUrl: "https://open.spotify.com/track/10",
+    },
+  ];
+
+  // Return limited number of songs
+  const songs = mockSongs.slice(0, songLimit);
+
+  res.json(songs);
+});
+
 app.listen(PORT, async () => {
   await db.read();
   let dataModified = false;

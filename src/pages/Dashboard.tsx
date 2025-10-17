@@ -3,6 +3,7 @@ import {
   SegmentProgress,
   SegmentSelector,
   SessionLogger,
+  SongSuggestions,
   TodaysSessions,
   WarmupList,
 } from "../components";
@@ -27,6 +28,11 @@ const Dashboard = () => {
           <WarmupList />
         </div>
       </main>
+
+      {/* Song Suggestions Section */}
+      <div className="mt-6">
+        <SongSuggestions />
+      </div>
     </>
   );
 };
