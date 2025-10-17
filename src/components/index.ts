@@ -14,7 +14,7 @@ export { default as PrintableReport } from "./PrintableReport";
 export { default as SegmentProgress } from "./SegmentProgress";
 export { default as SegmentSelector } from "./SegmentSelector";
 export { default as SessionLogger } from "./SessionLogger";
-export { SongSuggestions } from "./SongSuggestions";
+export { SongSuggestions, SongCard, SongList } from "./songs";
 export { default as TimeChart } from "./TimeChart";
 export { default as Timer } from "./Timer";
 export { default as TodaysSessions } from "./TodaysSessions";
