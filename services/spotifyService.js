@@ -72,7 +72,7 @@ export function getSongsByBpm(targetBpm, limit = 10, tolerance = 10) {
 }
 
 /**
- * Get song recommendations - tries local data first, falls back to Spotify tracks API
+ * Get song recommendations - tries local data first, then enriches with Spotify data
  * @param {number} targetBpm - Target BPM
  * @param {number} limit - Number of songs to return
  * @param {number} tolerance - BPM tolerance range (default: 10)
@@ -90,6 +90,40 @@ export async function getSongRecommendations(
     console.log(
       `Found ${localSongs.length} songs from local data for BPM ${targetBpm}`
     );
+    
+    // Try to enrich local songs with Spotify data if they have Spotify IDs
+    const songsWithSpotifyIds = localSongs.filter(song => song.spotifyId);
+    
+    if (songsWithSpotifyIds.length > 0) {
+      try {
+        console.log(`Enriching ${songsWithSpotifyIds.length} songs with Spotify data...`);
+        const enrichedSongs = await getSpotifyTracks(targetBpm, limit, songsWithSpotifyIds);
+        
+        // Merge local data with Spotify data
+        const mergedSongs = localSongs.map(localSong => {
+          const spotifySong = enrichedSongs.find(s => s.id === localSong.spotifyId);
+          if (spotifySong) {
+            return {
+              ...localSong,
+              previewUrl: spotifySong.previewUrl,
+              spotifyUrl: spotifySong.spotifyUrl,
+              albumArt: spotifySong.albumArt,
+              album: spotifySong.album,
+              popularity: spotifySong.popularity,
+              duration: spotifySong.duration,
+            };
+          }
+          return localSong;
+        });
+        
+        return mergedSongs;
+      } catch (error) {
+        console.error("Failed to enrich with Spotify data:", error);
+        // Return local songs without Spotify data
+        return localSongs;
+      }
+    }
+    
     return localSongs;
   }
 
@@ -107,21 +141,29 @@ export async function getSongRecommendations(
 
 /**
  * Get tracks from Spotify using track IDs from local data
- * @param {number} targetBpm - Target BPM
+ * @param {number} targetBpm - Target BPM (optional, used for fallback)
  * @param {number} limit - Number of songs to return
+ * @param {Array} specificSongs - Optional array of songs with Spotify IDs to fetch
  * @returns {Promise<Array>} Array of song objects
  */
-export async function getSpotifyTracks(targetBpm, limit = 10) {
+export async function getSpotifyTracks(targetBpm, limit = 10, specificSongs = null) {
   try {
     const token = await getAccessToken();
 
-    // Get songs with Spotify IDs from our local data
-    const songsWithIds = getSongsInBpmRange(targetBpm - 10, targetBpm + 10)
-      .filter((song) => song.spotifyId)
-      .slice(0, limit);
+    let songsWithIds;
+    
+    if (specificSongs) {
+      // Use provided songs with Spotify IDs
+      songsWithIds = specificSongs.filter(song => song.spotifyId);
+    } else {
+      // Get songs with Spotify IDs from our local data by BPM
+      songsWithIds = getSongsInBpmRange(targetBpm - 10, targetBpm + 10)
+        .filter((song) => song.spotifyId)
+        .slice(0, limit);
+    }
 
     if (songsWithIds.length === 0) {
-      console.log("No songs with Spotify IDs found for BPM", targetBpm);
+      console.log("No songs with Spotify IDs found");
       return [];
     }
 

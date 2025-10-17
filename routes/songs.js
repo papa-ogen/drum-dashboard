@@ -19,7 +19,12 @@ export async function getSongs(req, res, db) {
     const songLimit = parseInt(limit);
 
     const songs = await getSongsByBpm(targetBpm, songLimit);
-    res.json(songs);
+    // Include snake_case preview_url for clients expecting Spotify field name
+    const response = songs.map((song) => ({
+      ...song,
+      preview_url: song.previewUrl ?? song.preview_url ?? null,
+    }));
+    res.json(response);
   } catch (error) {
     console.error("Error fetching songs:", error);
     res.status(400).json({ error: error.message });

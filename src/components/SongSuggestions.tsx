@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSegmentContext } from "../hooks/useSegmentContext";
 import { useSessions, useSongs, API_ENDPOINTS } from "../utils/api";
 import { mutate } from "swr";
@@ -16,6 +16,11 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
     exerciseName: string;
     bpm: number;
   } | null>(null);
+
+  // Audio playback state
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Use SWR hook to fetch songs
   const { songs, isLoading, isError } = useSongs(
@@ -53,13 +58,78 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
     });
   }, [selectedSegment, sessions]);
 
+  // Clean up audio when component unmounts
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   const handlePlaySong = (song: Song) => {
-    if (song.previewUrl) {
-      // In a real implementation, you'd play the preview
-      console.log("Playing:", song.title, "at", song.previewUrl);
-    } else {
+    if (!song.previewUrl) {
       console.log("No preview available for:", song.title);
+      return;
     }
+
+    // If the same song is already playing, pause it
+    if (currentlyPlaying === song.id && isPlaying) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+      return;
+    }
+
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    // Create new audio element
+    const audio = new Audio(song.previewUrl);
+    audioRef.current = audio;
+
+    // Set up event listeners
+    audio.addEventListener("loadstart", () => {
+      console.log("Loading preview for:", song.title);
+    });
+
+    audio.addEventListener("canplay", () => {
+      console.log("Ready to play:", song.title);
+    });
+
+    audio.addEventListener("play", () => {
+      setIsPlaying(true);
+      setCurrentlyPlaying(song.id);
+    });
+
+    audio.addEventListener("pause", () => {
+      setIsPlaying(false);
+    });
+
+    audio.addEventListener("ended", () => {
+      setIsPlaying(false);
+      setCurrentlyPlaying(null);
+      audioRef.current = null;
+    });
+
+    audio.addEventListener("error", (e) => {
+      console.error("Error playing preview:", e);
+      setIsPlaying(false);
+      setCurrentlyPlaying(null);
+      audioRef.current = null;
+    });
+
+    // Start playing
+    audio.play().catch((error) => {
+      console.error("Failed to play audio:", error);
+      setIsPlaying(false);
+      setCurrentlyPlaying(null);
+    });
   };
 
   const handleAddToPlaylist = (song: Song) => {
@@ -127,7 +197,11 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
           {songs.map((song, index) => (
             <div
               key={song.id}
-              className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              className={`p-4 border rounded-lg transition-colors ${
+                currentlyPlaying === song.id
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 hover:bg-gray-50"
+              }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -138,6 +212,9 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
                     <h3 className="font-medium text-gray-900">{song.title}</h3>
                     <span className="text-gray-400">-</span>
                     <span className="text-gray-600">{song.artist}</span>
+                    {currentlyPlaying === song.id && (
+                      <span className="text-blue-600 text-sm">🔊 Playing</span>
+                    )}
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <span className="flex items-center gap-1">
@@ -152,10 +229,20 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
                 <div className="flex items-center gap-2 ml-4">
                   <button
                     onClick={() => handlePlaySong(song)}
-                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center gap-1"
+                    className={`px-3 py-1 text-sm rounded transition-colors flex items-center gap-1 ${
+                      currentlyPlaying === song.id && isPlaying
+                        ? "bg-red-600 text-white hover:bg-red-700"
+                        : song.previewUrl
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
                     disabled={!song.previewUrl}
                   >
-                    ▶️ Play
+                    {currentlyPlaying === song.id && isPlaying ? (
+                      <>⏸️ Pause</>
+                    ) : (
+                      <>▶️ Play</>
+                    )}
                   </button>
                   <button
                     onClick={() => handleAddToPlaylist(song)}
@@ -163,6 +250,16 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
                   >
                     ⭐ Add
                   </button>
+                  {song.spotifyUrl && (
+                    <a
+                      href={song.spotifyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
+                    >
+                      🎵 Spotify
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -177,6 +274,20 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
       )}
 
       <div className="mt-6 flex gap-2">
+        {currentlyPlaying && (
+          <button
+            onClick={() => {
+              if (audioRef.current) {
+                audioRef.current.pause();
+                setIsPlaying(false);
+                setCurrentlyPlaying(null);
+              }
+            }}
+            className="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center gap-2"
+          >
+            ⏹️ Stop All
+          </button>
+        )}
         <button
           onClick={() => {
             if (highestBpmExercise) {
