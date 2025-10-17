@@ -18,7 +18,7 @@ export async function getSongs(req, res, db) {
     const targetBpm = parseInt(bpm);
     const songLimit = parseInt(limit);
 
-    const songs = getSongsByBpm(targetBpm, songLimit);
+    const songs = await getSongsByBpm(targetBpm, songLimit);
     res.json(songs);
   } catch (error) {
     console.error("Error fetching songs:", error);

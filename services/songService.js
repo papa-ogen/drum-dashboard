@@ -1,4 +1,9 @@
 // services/songService.js
+import {
+  getSpotifyRecommendations,
+  searchSpotifyTracks,
+  isSpotifyConfigured,
+} from "./spotifyService.js";
 
 /**
  * Service for handling song-related operations
@@ -59,12 +64,12 @@ function generateRandomDuration() {
 }
 
 /**
- * Get songs by BPM
+ * Get songs by BPM using Spotify API with fallback to mock data
  * @param {number} bpm - The BPM to search for
  * @param {number} limit - Maximum number of songs to return
- * @returns {Array} Array of songs matching the BPM
+ * @returns {Promise<Array>} Array of songs matching the BPM
  */
-export function getSongsByBpm(bpm, limit = 10) {
+export async function getSongsByBpm(bpm, limit = 10) {
   if (!bpm || bpm <= 0) {
     throw new Error("Valid BPM is required");
   }
@@ -73,5 +78,41 @@ export function getSongsByBpm(bpm, limit = 10) {
     throw new Error("Limit must be between 1 and 50");
   }
 
+  // Try Spotify API first if configured
+  if (isSpotifyConfigured()) {
+    try {
+      console.log(`Fetching songs from Spotify for BPM: ${bpm}`);
+
+      // Try recommendations first (more accurate BPM matching)
+      let songs = await getSpotifyRecommendations(bpm, limit);
+
+      // If we don't get enough songs, try search as backup
+      if (songs.length < limit) {
+        console.log(
+          `Only got ${songs.length} songs from recommendations, trying search...`
+        );
+        const searchResults = await searchSpotifyTracks(
+          bpm,
+          limit - songs.length
+        );
+        songs = [...songs, ...searchResults];
+      }
+
+      if (songs.length > 0) {
+        console.log(`Successfully fetched ${songs.length} songs from Spotify`);
+        return songs.slice(0, limit);
+      }
+    } catch (error) {
+      console.warn(
+        "Spotify API failed, falling back to mock data:",
+        error.message
+      );
+    }
+  } else {
+    console.log("Spotify not configured, using mock data");
+  }
+
+  // Fallback to mock data
+  console.log(`Using mock data for BPM: ${bpm}`);
   return generateMockSongs(bpm, limit);
 }

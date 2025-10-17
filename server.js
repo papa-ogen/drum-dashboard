@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
 
 // Import route handlers
 import { initializeSegments, getSegments } from "./routes/segments.js";
@@ -48,7 +52,6 @@ app.get("/api/songs", (req, res) => getSongs(req, res, db));
 
 app.listen(PORT, async () => {
   await db.read();
-  let dataModified = false;
 
   // Initialize all data in the correct order
   try {
