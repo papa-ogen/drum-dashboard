@@ -33,6 +33,7 @@ import {
 } from "./routes/achievements.js";
 import { initializeAlbums, getAlbums, createAlbum } from "./routes/albums.js";
 import { getSongs } from "./routes/songs.js";
+import { getFavorites, addFavorite } from "./routes/favorites.js";
 
 const adapter = new JSONFile("db.json");
 const db = new Low(adapter, {
@@ -40,6 +41,7 @@ const db = new Low(adapter, {
   exercises: [],
   segments: [],
   userAchievements: [],
+  favorites: [],
 });
 
 const app = express();
@@ -60,6 +62,8 @@ app.post("/api/achievements", (req, res) =>
 app.get("/api/albums", (req, res) => getAlbums(req, res, db));
 app.post("/api/albums", (req, res) => createAlbum(req, res, db));
 app.get("/api/songs", (req, res) => getSongs(req, res, db));
+app.get("/api/favorites", (req, res) => getFavorites(req, res, db));
+app.post("/api/favorites", (req, res) => addFavorite(req, res, db));
 
 app.listen(PORT, async () => {
   await db.read();

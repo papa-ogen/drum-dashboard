@@ -108,5 +108,10 @@ export interface Song {
   genre: string;
   duration: string;
   previewUrl?: string;
+  preview_url?: string; // snake_case for Spotify compatibility
   spotifyUrl?: string;
+  spotifyId?: string;
+  album?: string;
+  albumArt?: string;
+  popularity?: number;
 }

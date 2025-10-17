@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate as swrMutate } from "swr";
 import { fetcher } from "./fetcher";
 import type {
   ISession,
@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   SEGMENTS: `${BASE_URL}/segments`,
   ACHIEVEMENTS: `${BASE_URL}/achievements`,
   SONGS: `${BASE_URL}/songs`,
+  FAVORITES: `${BASE_URL}/favorites`,
 } as const;
 
 export function useSessions(): {
@@ -106,6 +107,37 @@ export function useSongs(
     isLoading,
     isError: error,
   };
+}
+
+export function useFavorites(): {
+  favorites: Song[] | undefined;
+  isLoading: boolean;
+  isError: Error | undefined;
+} {
+  const { data, error, isLoading } = useSWR<Song[]>(
+    API_ENDPOINTS.FAVORITES,
+    fetcher
+  );
+
+  return {
+    favorites: data,
+    isLoading,
+    isError: error,
+  };
+}
+
+export async function addFavorite(song: Partial<Song>): Promise<void> {
+  const response = await fetch(API_ENDPOINTS.FAVORITES, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(song),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Failed to add favorite: ${response.status} ${text}`);
+  }
+  // Revalidate favorites list
+  await swrMutate(API_ENDPOINTS.FAVORITES);
 }
 
 export async function postSession(

@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useSegmentContext } from "../hooks/useSegmentContext";
-import { useSessions, useSongs, API_ENDPOINTS } from "../utils/api";
+import {
+  useSessions,
+  useSongs,
+  API_ENDPOINTS,
+  addFavorite,
+  useFavorites,
+} from "../utils/api";
 import { mutate } from "swr";
 import type { Song } from "../type";
 
@@ -27,6 +33,7 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
     highestBpmExercise?.bpm || null,
     10
   );
+  const { favorites } = useFavorites();
 
   // Find the highest BPM exercise for the current segment
   useEffect(() => {
@@ -132,9 +139,33 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
     });
   };
 
-  const handleAddToPlaylist = (song: Song) => {
-    // In a real implementation, you'd add to user's playlist
-    console.log("Adding to playlist:", song.title);
+  const [addingId, setAddingId] = useState<string | null>(null);
+  const handleAddToPlaylist = async (song: Song) => {
+    try {
+      setAddingId(song.id);
+      const payload: Partial<Song> & {
+        spotifyId?: string;
+        preview_url?: string;
+        album?: string;
+        albumArt?: string;
+        popularity?: number;
+      } = {
+        title: song.title,
+        artist: song.artist,
+        bpm: song.bpm,
+        spotifyId: song.spotifyId ?? song.id,
+        preview_url: song.preview_url ?? song.previewUrl,
+        spotifyUrl: song.spotifyUrl,
+        albumArt: song.albumArt,
+        album: song.album,
+        popularity: song.popularity,
+      };
+      await addFavorite(payload as Partial<Song>);
+    } catch (e) {
+      console.error("Failed to add favorite", e);
+    } finally {
+      setAddingId(null);
+    }
   };
 
   if (!selectedSegment) {
@@ -194,76 +225,106 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
 
       {!isLoading && songs && songs.length > 0 && (
         <div className="space-y-3">
-          {songs.map((song, index) => (
-            <div
-              key={song.id}
-              className={`p-4 border rounded-lg transition-colors ${
-                currentlyPlaying === song.id
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 hover:bg-gray-50"
-              }`}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-gray-500">
-                      {index + 1}.
-                    </span>
-                    <h3 className="font-medium text-gray-900">{song.title}</h3>
-                    <span className="text-gray-400">-</span>
-                    <span className="text-gray-600">{song.artist}</span>
-                    {currentlyPlaying === song.id && (
-                      <span className="text-blue-600 text-sm">🔊 Playing</span>
-                    )}
+          {(() => {
+            const favoriteKeys = new Set(
+              (favorites || []).map(
+                (f) => f.spotifyId || f.id || `${f.title}::${f.artist}`
+              )
+            );
+            const nonFavoriteSongs = songs.filter((s) => {
+              const key = s.spotifyId || s.id || `${s.title}::${s.artist}`;
+              return !favoriteKeys.has(key);
+            });
+            const ordered = [...(favorites || []), ...nonFavoriteSongs];
+            return ordered.map((song, index) => (
+              <div
+                key={song.id}
+                className={`p-4 border rounded-lg transition-colors ${
+                  currentlyPlaying === song.id
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm font-medium text-gray-500">
+                        {index + 1}.
+                      </span>
+                      <h3 className="font-medium text-gray-900">
+                        {song.title}
+                      </h3>
+                      <span className="text-gray-400">-</span>
+                      <span className="text-gray-600">{song.artist}</span>
+                      {favoriteKeys.has(
+                        song.spotifyId ||
+                          song.id ||
+                          `${song.title}::${song.artist}`
+                      ) && (
+                        <span className="text-yellow-600 text-sm">
+                          ⭐ Favorite
+                        </span>
+                      )}
+                      {currentlyPlaying === song.id && (
+                        <span className="text-blue-600 text-sm">
+                          🔊 Playing
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        🎵 {song.bpm} BPM
+                      </span>
+                      <span>•</span>
+                      <span>{song.genre}</span>
+                      <span>•</span>
+                      <span>{song.duration}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span className="flex items-center gap-1">
-                      🎵 {song.bpm} BPM
-                    </span>
-                    <span>•</span>
-                    <span>{song.genre}</span>
-                    <span>•</span>
-                    <span>{song.duration}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 ml-4">
-                  <button
-                    onClick={() => handlePlaySong(song)}
-                    className={`px-3 py-1 text-sm rounded transition-colors flex items-center gap-1 ${
-                      currentlyPlaying === song.id && isPlaying
-                        ? "bg-red-600 text-white hover:bg-red-700"
-                        : song.previewUrl
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    }`}
-                    disabled={!song.previewUrl}
-                  >
-                    {currentlyPlaying === song.id && isPlaying ? (
-                      <>⏸️ Pause</>
-                    ) : (
-                      <>▶️ Play</>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => handleAddToPlaylist(song)}
-                    className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors flex items-center gap-1"
-                  >
-                    ⭐ Add
-                  </button>
-                  {song.spotifyUrl && (
-                    <a
-                      href={song.spotifyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
+                  <div className="flex items-center gap-2 ml-4">
+                    <button
+                      onClick={() => handlePlaySong(song)}
+                      className={`px-3 py-1 text-sm rounded transition-colors flex items-center gap-1 ${
+                        currentlyPlaying === song.id && isPlaying
+                          ? "bg-red-600 text-white hover:bg-red-700"
+                          : song.previewUrl
+                          ? "bg-blue-600 text-white hover:bg-blue-700"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      }`}
+                      disabled={!song.previewUrl}
                     >
-                      🎵 Spotify
-                    </a>
-                  )}
+                      {currentlyPlaying === song.id && isPlaying ? (
+                        <>⏸️ Pause</>
+                      ) : (
+                        <>▶️ Play</>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => handleAddToPlaylist(song)}
+                      className={`px-3 py-1 text-sm rounded transition-colors flex items-center gap-1 ${
+                        addingId === song.id
+                          ? "bg-gray-300 text-gray-500 cursor-wait"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                      disabled={addingId === song.id}
+                    >
+                      {addingId === song.id ? "Adding..." : "⭐ Add"}
+                    </button>
+                    {song.spotifyUrl && (
+                      <a
+                        href={song.spotifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
+                      >
+                        🎵 Spotify
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ));
+          })()}
         </div>
       )}
 
