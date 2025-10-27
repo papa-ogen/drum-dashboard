@@ -129,21 +129,30 @@ export function SongList({
   return (
     <>
       <div className="space-y-3">
-        {orderedSongs.map((song, index) => (
-          <SongCard
-            key={song.id}
-            song={song}
-            index={index}
-            currentlyPlaying={currentlyPlaying}
-            isPlaying={isPlaying}
-            addingId={addingId}
-            isFavorite={favoriteKeys.has(
-              song.spotifyId || song.id || `${song.title}::${song.artist}`
-            )}
-            onPlay={handlePlaySong}
-            onAddToFavorites={handleAddToFavorites}
-          />
-        ))}
+        {orderedSongs.map((song, index) => {
+          // Create a unique key using multiple identifiers to avoid duplicates
+          const uniqueKey = song.spotifyId
+            ? `${song.spotifyId}-${index}`
+            : song.id
+            ? `${song.id}-${index}`
+            : `${song.title}-${song.artist}-${index}`;
+
+          return (
+            <SongCard
+              key={uniqueKey}
+              song={song}
+              index={index}
+              currentlyPlaying={currentlyPlaying}
+              isPlaying={isPlaying}
+              addingId={addingId}
+              isFavorite={favoriteKeys.has(
+                song.spotifyId || song.id || `${song.title}::${song.artist}`
+              )}
+              onPlay={handlePlaySong}
+              onAddToFavorites={handleAddToFavorites}
+            />
+          );
+        })}
       </div>
 
       <div className="mt-6 flex gap-2">

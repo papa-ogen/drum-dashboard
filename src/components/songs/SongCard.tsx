@@ -1,4 +1,5 @@
 import type { Song } from "../../type";
+import { SongMetadata } from "./SongMetadata";
 
 interface SongCardProps {
   song: Song;
@@ -31,15 +32,21 @@ export function SongCard({
           : "border-gray-200 hover:bg-gray-50"
       }`}
     >
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
+      <div className="flex items-start justify-between flex-col sm:flex-row">
+        <div className="flex-1 gap-2 mb-2 sm:mb-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-sm font-medium text-gray-500">
               {index + 1}.
             </span>
-            <h3 className="font-medium text-gray-900">{song.title}</h3>
-            <span className="text-gray-400">-</span>
-            <span className="text-gray-600">{song.artist}</span>
+            <div className="flex items-center gap-2">
+              <h3 className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-none">
+                {song.title}
+              </h3>
+              <span className="text-gray-400">-</span>
+              <span className="text-gray-600 truncate max-w-[120px] sm:max-w-none">
+                {song.artist}
+              </span>
+            </div>
             {isFavorite && (
               <span className="text-yellow-600 text-sm">⭐ Favorite</span>
             )}
@@ -47,15 +54,9 @@ export function SongCard({
               <span className="text-blue-600 text-sm">🔊 Playing</span>
             )}
           </div>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span className="flex items-center gap-1">🎵 {song.bpm} BPM</span>
-            <span>•</span>
-            <span>{song.genre}</span>
-            <span>•</span>
-            <span>{song.duration}</span>
-          </div>
+          <SongMetadata song={song} />
         </div>
-        <div className="flex items-center gap-2 ml-4">
+        <div className="flex items-center gap-2 sm:ml-4">
           <button
             onClick={() => onPlay(song)}
             className={`px-3 py-1 text-sm rounded transition-colors flex items-center gap-1 ${

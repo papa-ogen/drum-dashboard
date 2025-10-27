@@ -5,6 +5,7 @@ import {
   API_ENDPOINTS,
   addFavorite,
   useFavorites,
+  useExercises,
 } from "../../utils/api";
 import { mutate } from "swr";
 import { SongList } from "./SongList";
@@ -18,6 +19,7 @@ interface SongSuggestionsProps {
 export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
   const { selectedSegment } = useSegmentContext();
   const { sessions } = useSessions();
+  const { exercises } = useExercises();
   const [highestBpmExercise, setHighestBpmExercise] = useState<{
     exerciseId: string;
     exerciseName: string;
@@ -33,7 +35,7 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
 
   // Find the highest BPM exercise for the current segment
   useEffect(() => {
-    if (!selectedSegment || !sessions) return;
+    if (!selectedSegment || !sessions || !exercises) return;
 
     // For now, just use all sessions since ISession doesn't have segmentId
     // In a real app, you'd filter by segment or add segmentId to ISession
@@ -47,12 +49,16 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
       return current.bpm > highest.bpm ? current : highest;
     });
 
+    // Find the exercise name by ID
+    const exercise = exercises.find((e) => e.id === highestBpmSession.exercise);
+    const exerciseName = exercise?.name || "Unknown Exercise";
+
     setHighestBpmExercise({
       exerciseId: highestBpmSession.exercise,
-      exerciseName: highestBpmSession.exercise,
+      exerciseName: exerciseName,
       bpm: highestBpmSession.bpm,
     });
-  }, [selectedSegment, sessions]);
+  }, [selectedSegment, sessions, exercises]);
 
   const handleAddToFavorites = async (song: Song) => {
     const payload: Partial<Song> & {
@@ -138,10 +144,6 @@ export function SongSuggestions({ className = "" }: SongSuggestionsProps) {
         <p className="text-sm text-blue-800">
           <strong>Highest BPM Exercise:</strong>{" "}
           {highestBpmExercise.exerciseName} ({highestBpmExercise.bpm} BPM)
-        </p>
-        <p className="text-sm text-blue-600 mt-1">
-          💡 Songs are suggested based on your highest achieved BPM in this
-          segment. Favorites appear first!
         </p>
       </div>
 

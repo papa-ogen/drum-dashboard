@@ -1123,6 +1123,70 @@
       "time": 360,
       "readyForFaster": false,
       "id": "a4682dcc-f71e-4c68-98a2-052fb939930e"
+    },
+    {
+      "id": "cfda62c8-cc95-4e13-8b54-cd35b1902939",
+      "date": "2025-10-17T15:27:00.000Z",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 137,
+      "time": 360,
+      "readyForFaster": false
+    },
+    {
+      "id": "a11b518f-06df-4ac7-9fc6-d02ba4f4f85d",
+      "date": "2025-10-17T15:34:00.000Z",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 138,
+      "time": 360,
+      "readyForFaster": false
+    },
+    {
+      "id": "15d4ffe5-c900-49a6-99bf-24e128e51825",
+      "date": "2025-10-17T15:40:00.000Z",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 113,
+      "time": 360,
+      "readyForFaster": true
+    },
+    {
+      "id": "842d34f9-9360-472a-9526-05ff5eefac20",
+      "date": "2025-10-17T15:48:00.000Z",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 130,
+      "time": 360,
+      "readyForFaster": false
+    },
+    {
+      "id": "faee3c73-1796-4a01-929f-c0be9014ab84",
+      "date": "2025-10-20T14:58:00.000Z",
+      "exercise": "5d229049-7c4c-4632-bf1d-afcc463cfb84",
+      "bpm": 137,
+      "time": 360,
+      "readyForFaster": false
+    },
+    {
+      "id": "85e7efd7-8946-4851-a939-e31855100370",
+      "date": "2025-10-20T15:08:00.000Z",
+      "exercise": "dd24db3c-f274-4622-a0b5-54ab101f6157",
+      "bpm": 114,
+      "time": 360,
+      "readyForFaster": false
+    },
+    {
+      "id": "61a51f27-37b6-47d9-9a56-b58fd3cc8c48",
+      "date": "2025-10-20T15:14:00.000Z",
+      "exercise": "9a1d1cbd-ce37-4332-b22c-e0d1fbc2a8ce",
+      "bpm": 138,
+      "time": 360,
+      "readyForFaster": false
+    },
+    {
+      "id": "8424c285-88c9-4d7b-8c1b-41f48eeda7c4",
+      "date": "2025-10-20T15:20:00.000Z",
+      "exercise": "e3412c0b-3818-4629-a3a7-e5bfe42fb14e",
+      "bpm": 130,
+      "time": 360,
+      "readyForFaster": false
     }
   ],
   "exercises": [
